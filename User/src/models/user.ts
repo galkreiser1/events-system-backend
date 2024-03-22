@@ -17,16 +17,7 @@ const userSchema = new mongoose.Schema<userType>(
       required: true,
       default: "U",
     },
-    orders: {
-      type: [
-        {
-          checkout_date: { type: Date, required: true },
-          ticket_type: { type: String, required: true },
-          quantity: { type: Number, required: true, min: 1 },
-          event_id: { type: String, required: true },
-        },
-      ],
-    },
+
     coupons_used: { type: Number, default: 0 },
   },
   { timestamps: true }
