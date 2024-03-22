@@ -5,6 +5,7 @@ export interface userType {
   password: string;
   permission: "U" | "W" | "M" | "A";
   coupons_used: number;
+  next_event: string;
 }
 
 const userSchema = new mongoose.Schema<userType>(
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema<userType>(
     },
 
     coupons_used: { type: Number, default: 0 },
+    next_event: { type: String, default: "" },
   },
   { timestamps: true }
 );
