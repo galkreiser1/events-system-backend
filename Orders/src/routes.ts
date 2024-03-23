@@ -2,19 +2,24 @@ import { Request, Response } from "express";
 import Order from "./models/order.js";
 import axios from "axios";
 
+const EVENTS_SERVICE_URL = "http://localhost:3001";
+
 export const getUserOrdersRoute = async (req: Request, res: Response) => {
   const userId = req.params.userId;
 
   try {
-    const orders = await Order.find({ user_id: userId }).exec();
+    const orders = await Order.find({ user_id: userId }).lean();
 
     const ordersWithEvents = await Promise.all(
       orders.map(async (order) => {
-        const eventResponse = await axios.get(`/api/event/${order.event_id}`);
+        const eventResponse = await axios.get(
+          `${EVENTS_SERVICE_URL}/api/event/${order.event_id}`
+        );
         const event = eventResponse.data;
-
-        const orderWithEvent = { ...order, event };
-        delete orderWithEvent.event_id;
+        delete event._id;
+        const { checkout_date, ticket_type, quantity, user_id } = order;
+        const trimOrder = { checkout_date, ticket_type, quantity, user_id };
+        const orderWithEvent = { ...trimOrder, event };
         return orderWithEvent;
       })
     );

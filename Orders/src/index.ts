@@ -16,7 +16,7 @@ dbUri = `mongodb+srv://galkreiser:bADRRlIAm7ke6K5N@cluster2.zpgwucf.mongodb.net/
 
 await mongoose.connect(dbUri);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 
 const app = express();
 app.use(express.json());
