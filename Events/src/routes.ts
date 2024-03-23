@@ -33,8 +33,6 @@ export const createEventRoute = async (req: Request, res: Response) => {
   try {
     const eventData = req.body;
 
-    console.log("eventData", eventData);
-
     const newEvent = new Event(eventData);
 
     await newEvent.save();
@@ -83,7 +81,7 @@ export const updateTicketQuantityRoute = async (
   res: Response
 ) => {
   const eventId = req.params.id;
-  const { ticketType, quantity } = req.body;
+  const { ticket_type, quantity } = req.body;
 
   try {
     const event = await Event.findById(eventId);
@@ -93,7 +91,7 @@ export const updateTicketQuantityRoute = async (
     }
 
     const ticketIndex = event.tickets.findIndex(
-      (ticket) => ticket.type === ticketType
+      (ticket) => ticket.type === ticket_type
     );
 
     if (ticketIndex === -1) {
