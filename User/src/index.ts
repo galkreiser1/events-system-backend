@@ -24,6 +24,12 @@ import {
 } from "./event_routes.js";
 
 import {
+  createOrderRoute,
+  getUsersByEventRoute,
+  getUserOrdersRoute,
+} from "./order_routes.js";
+
+import {
   LOGIN_PATH,
   LOGOUT_PATH,
   NEXT_EVENT_PATH,
@@ -35,6 +41,9 @@ import {
   CREATE_EVENT_PATH,
   UPDATE_EVENT_DATE_PATH,
   UPDATE_EVENT_TICKET_PATH,
+  CREATE_ORDER_PATH,
+  GET_USERS_BY_EVENT_PATH,
+  GET_USER_ORDERS_PATH,
 } from "./consts.js";
 
 dotenv.config();
@@ -81,6 +90,11 @@ app.get(GET_ALL_EVENTS_PATH, getAllEventsRoute);
 app.post(CREATE_EVENT_PATH, createEventRoute);
 app.put(UPDATE_EVENT_DATE_PATH, updateEventDateRoute);
 app.put(UPDATE_EVENT_TICKET_PATH, updateTicketRoute);
+
+/*ORDER ROUTES*/
+app.post(CREATE_ORDER_PATH, createOrderRoute);
+app.get(GET_USERS_BY_EVENT_PATH, getUsersByEventRoute);
+app.get(GET_USER_ORDERS_PATH, getUserOrdersRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);
