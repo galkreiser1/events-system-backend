@@ -42,6 +42,7 @@ export const createEventRoute = async (req: Request, res: Response) => {
   }
   try {
     const eventData = req.body;
+    console.log(eventData);
 
     const response = await axios.post(
       `${EVENTS_SERVICE_URL}/api/event`,
