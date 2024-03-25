@@ -7,6 +7,7 @@ export const NEXT_EVENT_PATH = "/api/next_event";
 export const COUPONS_PATH = "/api/coupons";
 
 /* EVENT ROUTES */
+export const EVENT_SERVER_URL = "https://events-system-event.onrender.com";
 export const GET_EVENT_PATH = "/api/event/:id";
 export const GET_ALL_EVENTS_PATH = "/api/event";
 export const CREATE_EVENT_PATH = "/api/event";

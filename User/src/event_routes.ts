@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import { verifyToken } from "./helper_func.js";
-
-const EVENTS_SERVICE_URL = "http://localhost:3001";
+import { EVENT_SERVER_URL } from "./consts.js";
 
 export const getEventRoute = async (req: Request, res: Response) => {
   if (!verifyToken(req, res) && !req.headers["admin"]) {
@@ -12,7 +11,7 @@ export const getEventRoute = async (req: Request, res: Response) => {
   try {
     const eventId = req.params.id;
     const response = await axios.get(
-      `${EVENTS_SERVICE_URL}/api/event/${eventId}`
+      `${EVENT_SERVER_URL}/api/event/${eventId}`
     );
     res.json(response.data);
   } catch (error) {
@@ -27,7 +26,7 @@ export const getAllEventsRoute = async (req: Request, res: Response) => {
     return;
   }
   try {
-    const response = await axios.get(`${EVENTS_SERVICE_URL}/api/event`);
+    const response = await axios.get(`${EVENT_SERVER_URL}/api/event`);
     res.json(response.data);
   } catch (error) {
     console.error("Error fetching event:", error);
@@ -45,7 +44,7 @@ export const createEventRoute = async (req: Request, res: Response) => {
     console.log(eventData);
 
     const response = await axios.post(
-      `${EVENTS_SERVICE_URL}/api/event`,
+      `${EVENT_SERVER_URL}/api/event`,
       eventData
     );
 
@@ -80,7 +79,7 @@ export const updateEventDateRoute = async (req: Request, res: Response) => {
     }
 
     const response = await axios.put(
-      `${EVENTS_SERVICE_URL}/api/event/${eventId}/date`,
+      `${EVENT_SERVER_URL}/api/event/${eventId}/date`,
       eventData
     );
 
@@ -107,7 +106,7 @@ export const updateTicketRoute = async (req: Request, res: Response) => {
     }
 
     const response = await axios.put(
-      `${EVENTS_SERVICE_URL}/api/event/${eventId}/ticket`,
+      `${EVENT_SERVER_URL}/api/event/${eventId}/ticket`,
       {
         ticket_type,
         quantity,
