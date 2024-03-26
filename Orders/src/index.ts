@@ -12,7 +12,7 @@ dotenv.config();
 
 let dbUri;
 
-dbUri = `mongodb+srv://galkreiser:bADRRlIAm7ke6K5N@cluster2.zpgwucf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2`;
+dbUri = `mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@cluster2.zpgwucf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2`;
 
 await mongoose.connect(dbUri);
 

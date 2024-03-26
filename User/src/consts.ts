@@ -1,4 +1,5 @@
 /* USER/AUTH ROUTES */
+export const USER_SERVER_URL = "https://events-system-users.onrender.com";
 export const LOGIN_PATH = "/api/login";
 export const LOGOUT_PATH = "/api/logout";
 export const SIGNUP_PATH = "/api/signup";
