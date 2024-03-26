@@ -25,7 +25,7 @@ export const getUserOrdersRoute = async (req: Request, res: Response) => {
       })
     );
 
-    res.json(ordersWithEvents);
+    res.status(200).json(ordersWithEvents);
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).json({ error: "Internal server error" });
