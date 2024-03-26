@@ -6,10 +6,10 @@ import axios from "axios";
 const EVENTS_SERVICE_URL = "https://events-system-event.onrender.com";
 
 export const getUserOrdersRoute = async (req: Request, res: Response) => {
-  const userId = req.params.userId;
+  const username = req.params.username;
 
   try {
-    const orders = await Order.find({ user_id: userId }).lean();
+    const orders = await Order.find({ username: username }).lean();
 
     const ordersWithEvents = await Promise.all(
       orders.map(async (order) => {
@@ -18,8 +18,8 @@ export const getUserOrdersRoute = async (req: Request, res: Response) => {
         );
         const event = eventResponse.data;
         delete event._id;
-        const { checkout_date, ticket_type, quantity, user_id } = order;
-        const trimOrder = { checkout_date, ticket_type, quantity, user_id };
+        const { checkout_date, ticket_type, quantity, username } = order;
+        const trimOrder = { checkout_date, ticket_type, quantity, username };
         const orderWithEvent = { ...trimOrder, event };
         return orderWithEvent;
       })
@@ -59,11 +59,28 @@ export const getUsersByEventRoute = async (req: Request, res: Response) => {
   try {
     const orders = await Order.find({ event_id: eventId });
 
-    const userIds = orders.map((order) => order.user_id);
+    const username = orders.map((order) => order.username);
 
-    const uniqueUserIds = Array.from(new Set(userIds));
+    const uniqueUsernames = Array.from(new Set(username));
 
-    res.status(200).json(uniqueUserIds);
+    res.status(200).json(uniqueUsernames);
+  } catch (error) {
+    console.error("Error fetching user IDs:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getEventsByUserRoute = async (req: Request, res: Response) => {
+  const username = req.params.username;
+
+  try {
+    const orders = await Order.find({ username: username });
+
+    const events = orders.map((order) => order.event_id);
+
+    const uniqueEvents = Array.from(new Set(events));
+
+    res.status(200).json(uniqueEvents);
   } catch (error) {
     console.error("Error fetching user IDs:", error);
     res.status(500).json({ error: "Internal server error" });

@@ -5,7 +5,7 @@ export interface orderType {
   ticket_type: string;
   quantity: number;
   event_id: string;
-  user_id: string;
+  username: string;
 }
 
 const orderSchema = new mongoose.Schema<orderType>({
@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema<orderType>({
   ticket_type: { type: String, required: true },
   quantity: { type: Number, required: true, min: 1 },
   event_id: { type: String, required: true },
-  user_id: { type: String, required: true },
+  username: { type: String, required: true },
 });
 
 export default mongoose.model<orderType>("Order", orderSchema);
