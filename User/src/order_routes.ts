@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import { verifyToken } from "./helper_func.js";
+import { ORDERS_SERVER_URL } from "./consts.js";
 
-const ORDERS_SERVICE_URL = "http://localhost:3002";
+const is_local = false;
+
+const ORDERS_SERVICE_URL = is_local
+  ? "http://localhost:3002"
+  : ORDERS_SERVER_URL;
 
 export const createOrderRoute = async (req: Request, res: Response) => {
   if (!verifyToken(req, res) && !req.headers["admin"]) {
