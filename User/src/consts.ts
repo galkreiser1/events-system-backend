@@ -1,3 +1,5 @@
+export const IS_LOCAL = false;
+
 /* USER/AUTH ROUTES */
 export const USER_SERVER_URL = "https://events-system-users.onrender.com";
 export const LOGIN_PATH = "/api/login";
@@ -20,3 +22,4 @@ export const ORDERS_SERVER_URL = "https://events-system-order.onrender.com";
 export const CREATE_ORDER_PATH = "/api/order";
 export const GET_USER_ORDERS_PATH = "/api/order/:userId";
 export const GET_USERS_BY_EVENT_PATH = "/api/order/users/:eventId";
+export const GET_EVENTS_BY_USER_PATH = "/api/order/events/:username";

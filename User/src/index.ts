@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
+import { consumeMessages } from "./consumer.js";
 
 import {
   loginRoute,
@@ -12,6 +13,7 @@ import {
   updateNumofCouponsRoute,
   getNextEventRoute,
   getNumofCouponsRoute,
+  getUserRoute,
   //usernameRoute,
 } from "./routes.js";
 
@@ -27,6 +29,7 @@ import {
   createOrderRoute,
   getUsersByEventRoute,
   getUserOrdersRoute,
+  getEventsByUserRoute,
 } from "./order_routes.js";
 
 import {
@@ -44,19 +47,22 @@ import {
   CREATE_ORDER_PATH,
   GET_USERS_BY_EVENT_PATH,
   GET_USER_ORDERS_PATH,
+  GET_EVENTS_BY_USER_PATH,
 } from "./consts.js";
 
 dotenv.config();
 
 let dbUri;
-const dbusername = process.env.DBUSERNAME || "galkreiser";
-const dbpass = process.env.DBPASS || "bADRRlIAm7ke6K5N";
+const DBUSER = process.env.DBUSER || "galkreiser";
+const DBPASS = process.env.DBPASS || "bADRRlIAm7ke6K5N";
 
-dbUri = `mongodb+srv://${dbusername}:${dbpass}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
+dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
 
 await mongoose.connect(dbUri);
 
 const port = process.env.PORT || 3000;
+
+consumeMessages();
 
 const app = express();
 
@@ -82,7 +88,7 @@ app.post(COUPONS_PATH, updateNumofCouponsRoute);
 app.get(NEXT_EVENT_PATH, getNextEventRoute);
 app.get(COUPONS_PATH, getNumofCouponsRoute);
 
-//app.get(USERNAME_PATH, usernameRoute);
+app.get(USERNAME_PATH, getUserRoute);
 
 /* EVENT ROUTES */
 app.get(GET_EVENT_PATH, getEventRoute);
@@ -95,6 +101,7 @@ app.put(UPDATE_EVENT_TICKET_PATH, updateTicketRoute);
 app.post(CREATE_ORDER_PATH, createOrderRoute);
 app.get(GET_USERS_BY_EVENT_PATH, getUsersByEventRoute);
 app.get(GET_USER_ORDERS_PATH, getUserOrdersRoute);
+app.get(GET_EVENTS_BY_USER_PATH, getEventsByUserRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);
