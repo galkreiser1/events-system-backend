@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Event from "./models/event.js";
+import { publisherChannel } from "./index.js";
 
 export async function getEventRoute(req: Request, res: Response) {
   const eventId = req.params.id;
@@ -69,7 +70,9 @@ export const updateEventDatesRoute = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    return res.json({ event: updatedEvent });
+    await publisherChannel.sendEvent(JSON.stringify({ event_id: id }));
+
+    return res.status(200).json({ event: updatedEvent });
   } catch (error) {
     console.error("Error updating event dates:", error);
     return res.status(500).json({ message: "Internal server error" });
