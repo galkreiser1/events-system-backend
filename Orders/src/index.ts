@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import { consumeMessages } from "./consumer.js";
+
 import {
   CREATE_ORDER,
   GET_USER_ORDERS,
@@ -14,13 +16,21 @@ import {
   getEventsByUserRoute,
 } from "./routes.js";
 
+import { PublisherChannel } from "./publisher.js";
+
+export const publisherChannel = new PublisherChannel();
+
 dotenv.config();
 
 let dbUri;
 
-dbUri = `mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@cluster2.zpgwucf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2`;
+const DBUSER = process.env.DBUSER || "galkreiser";
+const DBPASS = process.env.DBPASS || "bADRRlIAm7ke6K5N";
+
+dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2`;
 
 await mongoose.connect(dbUri);
+consumeMessages();
 
 const port = process.env.PORT || 3002;
 
