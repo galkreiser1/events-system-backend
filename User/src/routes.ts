@@ -188,7 +188,7 @@ export async function updateNumofCouponsRoute(req: Request, res: Response) {
 
 export async function getUserRoute(req: Request, res: Response) {
   if (!verifyToken(req, res)) {
-    res.status(401);
+    res.status(401).send("Not logged in");
     return;
   }
   const token = req.cookies.token;

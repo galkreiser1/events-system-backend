@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import axios from "axios";
-import { verifyToken } from "./helper_func.js";
+import { verifyToken, getUsernameFromCookie } from "./helper_func.js";
 import { ORDERS_SERVER_URL, IS_LOCAL } from "./consts.js";
 
 const ORDERS_SERVICE_URL = IS_LOCAL
@@ -47,15 +47,15 @@ export const getUsersByEventRoute = async (req: Request, res: Response) => {
 };
 
 export const getUserOrdersRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
   try {
-    const userId = req.params.userId;
+    const username = getUsernameFromCookie(req);
 
     const response = await axios.get(
-      `${ORDERS_SERVICE_URL}/api/order/${userId}`
+      `${ORDERS_SERVICE_URL}/api/order/${username}`
     );
 
     res.json(response.data);
