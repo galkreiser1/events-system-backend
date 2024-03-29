@@ -53,7 +53,7 @@ import {
 dotenv.config();
 
 let dbUri;
-const DBUSER = process.env.DBUSER || "galkreiser";
+const DBUSER = process.env.DBUSERNAME || "galkreiser";
 const DBPASS = process.env.DBPASS || "bADRRlIAm7ke6K5N";
 
 dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
