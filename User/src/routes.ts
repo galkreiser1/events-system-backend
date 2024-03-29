@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
+import { verifyToken } from "./helper_func.js";
 import User from "./models/user.js";
+
+const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 export async function loginRoute(req: Request, res: Response) {
   const credentials = req.body;
@@ -27,11 +29,13 @@ export async function loginRoute(req: Request, res: Response) {
     return;
   }
 
-  const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ username: user.username }, JWT_SECRET, {
     expiresIn: "2d",
   });
 
-  const secure = process.env.NODE_ENV === "production";
+  const secure = process.env.NODE_ENV
+    ? process.env.NODE_ENV === "production"
+    : true;
 
   res.cookie("token", token, { httpOnly: true, secure, sameSite: "none" });
 
@@ -79,7 +83,7 @@ export async function getNextEventRoute(req: Request, res: Response) {
 
   let username;
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET);
     username = (payload as JwtPayload).username;
   } catch (e) {
     res.status(401).send("Invalid token");
@@ -98,21 +102,7 @@ export async function getNextEventRoute(req: Request, res: Response) {
 }
 
 export async function updateNextEventRoute(req: Request, res: Response) {
-  const token = req.cookies.token;
-  if (!token) {
-    res.status(401).send("Not logged in");
-    return;
-  }
-
-  let username;
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    username = (payload as JwtPayload).username;
-  } catch (e) {
-    res.status(401).send("Invalid token");
-    return;
-  }
-
+  const username = req.body.username;
   let user;
   try {
     user = await User.findOne({ username });
@@ -141,7 +131,7 @@ export async function getNumofCouponsRoute(req: Request, res: Response) {
 
   let username;
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET);
     username = (payload as JwtPayload).username;
   } catch (e) {
     res.status(401).send("Invalid token");
@@ -170,7 +160,7 @@ export async function updateNumofCouponsRoute(req: Request, res: Response) {
 
   let username;
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET);
     username = (payload as JwtPayload).username;
   } catch (e) {
     res.status(401).send("Invalid token");
@@ -196,6 +186,26 @@ export async function updateNumofCouponsRoute(req: Request, res: Response) {
   res.status(200).send({ coupons_used: user.coupons_used });
 }
 
+export async function getUserRoute(req: Request, res: Response) {
+  if (!verifyToken(req, res)) {
+    res.status(401).send("Not logged in");
+    return;
+  }
+  const token = req.cookies.token;
+  let username;
+  const payload = jwt.verify(token, JWT_SECRET);
+  username = (payload as JwtPayload).username;
+  let user;
+  try {
+    user = await User.findOne({ username });
+    const { permission } = user;
+    res.status(200).send({ username: username, permission: permission });
+  } catch (e) {
+    res.status(500).send("Internal server error");
+    return;
+  }
+}
+
 //TODO: change the permission of the user
 // think what to do if the user has other permissions other than U
 
@@ -208,7 +218,7 @@ export async function updateNumofCouponsRoute(req: Request, res: Response) {
 
 //   let username;
 //   try {
-//     const payload = jwt.verify(token, process.env.JWT_SECRET);
+//     const payload = jwt.verify(token, JWT_SECRET);
 //     username = (payload as JwtPayload).username;
 //   } catch (e) {
 //     res.status(401).send("Invalid token");

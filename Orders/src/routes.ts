@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import Order from "./models/order.js";
 import axios from "axios";
+import { IS_LOCAL } from "./const.js";
 
-// const EVENTS_SERVICE_URL = "http://localhost:3001";
-const EVENTS_SERVICE_URL = "https://events-system-event.onrender.com";
+const EVENTS_SERVICE_URL = IS_LOCAL
+  ? "http://localhost:3001"
+  : "https://events-system-event.onrender.com";
 
 export const getUserOrdersRoute = async (req: Request, res: Response) => {
   const username = req.params.username;

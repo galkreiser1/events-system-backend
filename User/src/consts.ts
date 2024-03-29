@@ -1,3 +1,5 @@
+export const IS_LOCAL = false;
+
 /* USER/AUTH ROUTES */
 export const USER_SERVER_URL = "https://events-system-users.onrender.com";
 export const LOGIN_PATH = "/api/login";
@@ -18,7 +20,7 @@ export const UPDATE_EVENT_TICKET_PATH = "/api/event/:id/ticket";
 /* ORDER ROUTES */
 export const ORDERS_SERVER_URL = "https://events-system-order.onrender.com";
 export const CREATE_ORDER_PATH = "/api/order";
-export const GET_USER_ORDERS_PATH = "/api/order/:userId";
+export const GET_USER_ORDERS_PATH = "/api/order";
 export const GET_USERS_BY_EVENT_PATH = "/api/order/users/:eventId";
 
 /* COMMENT ROUTES */
@@ -27,3 +29,4 @@ export const COMMENTS_SERVER_URL =
 export const CREATE_COMMENT = "/api/comment";
 export const GET_COMMENTS_BY_EVENT = "/api/comment/:eventId/:page";
 export const GET_NUM_OF_COMMENTS_BY_EVENT = "/api/comment/:eventId/num";
+export const GET_EVENTS_BY_USER_PATH = "/api/order/events/:username";

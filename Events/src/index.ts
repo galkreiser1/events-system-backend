@@ -16,11 +16,18 @@ import {
   updateTicketQuantityRoute,
 } from "./routes.js";
 
+import { PublisherChannel } from "./publisher.js";
+
 dotenv.config();
+
+export const publisherChannel = new PublisherChannel();
 
 let dbUri;
 
-dbUri = `mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@cluster2.zpgwucf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2`;
+const DBUSER = process.env.DBUSER || "galkreiser";
+const DBPASS = process.env.DBPASS || "bADRRlIAm7ke6K5N";
+
+dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2`;
 
 await mongoose.connect(dbUri);
 

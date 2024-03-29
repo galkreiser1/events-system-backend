@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import axios from "axios";
-import { verifyToken } from "./helper_func.js";
-import { ORDERS_SERVER_URL } from "./consts.js";
+import { verifyToken, getUsernameFromCookie } from "./helper_func.js";
+import { ORDERS_SERVER_URL, IS_LOCAL } from "./consts.js";
 
-const is_local = false;
-
-const ORDERS_SERVICE_URL = is_local
+const ORDERS_SERVICE_URL = IS_LOCAL
   ? "http://localhost:3002"
   : ORDERS_SERVER_URL;
 
@@ -49,20 +47,39 @@ export const getUsersByEventRoute = async (req: Request, res: Response) => {
 };
 
 export const getUserOrdersRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
   try {
-    const userId = req.params.userId;
+    const username = getUsernameFromCookie(req);
 
     const response = await axios.get(
-      `${ORDERS_SERVICE_URL}/api/order/${userId}`
+      `${ORDERS_SERVICE_URL}/api/order/${username}`
     );
 
     res.json(response.data);
   } catch (error) {
     console.error("Error fetching user orders:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getEventsByUserRoute = async (req: Request, res: Response) => {
+  if (!verifyToken(req, res) && !req.headers["admin"]) {
+    res.status(401).send("Not logged in");
+    return;
+  }
+  try {
+    const username = req.params.username;
+
+    const response = await axios.get(
+      `${ORDERS_SERVICE_URL}/api/order/events/${username}`
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error fetching events by user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
