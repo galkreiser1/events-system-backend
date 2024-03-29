@@ -56,10 +56,9 @@ export async function getNumOfCommentsByEventRoute(
   //     return;
   //   }
 
-  let count;
   try {
     const count = await Comment.countDocuments({ eventId: eventId });
-    res.status(200).send({ count: count });
+    res.status(200).send(count.toString());
   } catch (e) {
     res.status(500).send("Internal server error");
   }
