@@ -33,6 +33,12 @@ import {
 } from "./order_routes.js";
 
 import {
+  createCommentRoute,
+  getCommentsByEventRoute,
+  getNumOfCommentsByEventRoute,
+} from "./comment_routes.js";
+
+import {
   LOGIN_PATH,
   LOGOUT_PATH,
   NEXT_EVENT_PATH,
@@ -48,6 +54,9 @@ import {
   GET_USERS_BY_EVENT_PATH,
   GET_USER_ORDERS_PATH,
   GET_EVENTS_BY_USER_PATH,
+  CREATE_COMMENT,
+  GET_COMMENTS_BY_EVENT,
+  GET_NUM_OF_COMMENTS_BY_EVENT,
 } from "./consts.js";
 
 dotenv.config();
@@ -102,6 +111,11 @@ app.post(CREATE_ORDER_PATH, createOrderRoute);
 app.get(GET_USERS_BY_EVENT_PATH, getUsersByEventRoute);
 app.get(GET_USER_ORDERS_PATH, getUserOrdersRoute);
 app.get(GET_EVENTS_BY_USER_PATH, getEventsByUserRoute);
+
+/* COMMENT ROUTES */
+app.post(CREATE_COMMENT, createCommentRoute);
+app.get(GET_COMMENTS_BY_EVENT, getCommentsByEventRoute);
+app.get(GET_NUM_OF_COMMENTS_BY_EVENT, getNumOfCommentsByEventRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);
