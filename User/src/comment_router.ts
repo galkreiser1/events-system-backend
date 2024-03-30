@@ -25,7 +25,7 @@ export const createCommentRoute = async (req: Request, res: Response) => {
     res.json(response.data);
   } catch (error) {
     console.error("Error creating comment:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "API Gateaway - Internal server error" });
   }
 };
 

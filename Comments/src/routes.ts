@@ -5,22 +5,22 @@ import axios from "axios";
 //TODO: errors
 //TODO: security?
 export async function createCommentRoute(req: Request, res: Response) {
-  const { event_id, username, text, date } = req.body;
-
   try {
-    const newComment = new Comment({
-      event_id,
-      username,
-      text,
-      date,
-    });
+    const newComment = new Comment(req.body);
+
+    try {
+      const error = await newComment.validate();
+    } catch (e) {
+      res.status(400).send("Invalid comment. you sent: " + req.body);
+      return;
+    }
 
     await newComment.save();
 
     res.status(201).json(newComment);
   } catch (error) {
     console.error("Error creating comment:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "server - Internal server error" });
   }
 }
 
