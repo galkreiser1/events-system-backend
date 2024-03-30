@@ -6,12 +6,13 @@ import axios from "axios";
 //TODO: security?
 export async function createCommentRoute(req: Request, res: Response) {
   try {
-    const newComment = new Comment(req.body);
+    const commentData = req.body;
+    const newComment = new Comment(commentData);
 
     try {
       const error = await newComment.validate();
     } catch (e) {
-      res.status(400).send("Invalid comment. you sent: " + req.body);
+      res.status(400).send("Invalid comment. you sent: " + commentData);
       return;
     }
 

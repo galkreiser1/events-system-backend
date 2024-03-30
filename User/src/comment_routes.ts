@@ -18,9 +18,10 @@ export const createCommentRoute = async (req: Request, res: Response) => {
   // }
 
   try {
+    const commentData = req.body;
     const response = await axios.post(
       COMMENTS_SERVER_URL + "/api/comment",
-      req.body
+      commentData
     );
     res.json(response.data);
   } catch (error) {
