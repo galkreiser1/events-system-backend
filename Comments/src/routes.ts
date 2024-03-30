@@ -5,12 +5,12 @@ import axios from "axios";
 //TODO: errors
 //TODO: security?
 export async function createCommentRoute(req: Request, res: Response) {
-  const { event_id, user_id, text, date } = req.body;
+  const { event_id, username, text, date } = req.body;
 
   try {
     const newComment = new Comment({
       event_id,
-      user_id,
+      username,
       text,
       date,
     });
