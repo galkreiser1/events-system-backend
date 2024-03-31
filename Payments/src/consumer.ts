@@ -1,11 +1,14 @@
 import * as amqp from "amqplib";
 import UserCoupon from "./models/user_coupons.js";
 
+const AMQPUSER = process.env.AMQPUSER || "galkreiser";
+const AMQPPASS = process.env.AMQPPASS || "bADRRlIAm7ke6K5N";
+
 export const consumeMessages = async () => {
   try {
     // connect to RabbitMQ
     const conn = await amqp.connect(
-      "amqps://eayfadwk:dQJ0QpNDB2ihFMPsiPkfEMYba5TL2Oya@sparrow.rmq.cloudamqp.com/eayfadwk"
+      `amqps://${AMQPUSER}:${AMQPPASS}@sparrow.rmq.cloudamqp.com/eayfadwk`
     );
     const channel = await conn.createChannel();
 
