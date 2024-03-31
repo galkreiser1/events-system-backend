@@ -33,6 +33,12 @@ import {
 } from "./order_routes.js";
 
 import {
+  getCouponRoute,
+  createCouponRoute,
+  buyRoute,
+} from "./payment_routes.js";
+
+import {
   LOGIN_PATH,
   LOGOUT_PATH,
   NEXT_EVENT_PATH,
@@ -48,6 +54,9 @@ import {
   GET_USERS_BY_EVENT_PATH,
   GET_USER_ORDERS_PATH,
   GET_EVENTS_BY_USER_PATH,
+  GET_COUPON_PATH,
+  CREATE_COUPON_PATH,
+  BUY_PATH,
 } from "./consts.js";
 
 dotenv.config();
@@ -102,6 +111,11 @@ app.post(CREATE_ORDER_PATH, createOrderRoute);
 app.get(GET_USERS_BY_EVENT_PATH, getUsersByEventRoute);
 app.get(GET_USER_ORDERS_PATH, getUserOrdersRoute);
 app.get(GET_EVENTS_BY_USER_PATH, getEventsByUserRoute);
+
+/* PAYMENT ROUTES */
+app.get(GET_COUPON_PATH, getCouponRoute);
+app.post(CREATE_COUPON_PATH, createCouponRoute);
+app.post(BUY_PATH, buyRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);

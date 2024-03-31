@@ -3,8 +3,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { verifyToken } from "./helper_func.js";
 import User from "./models/user.js";
+import { JWT_SECRET } from "./consts.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 export async function loginRoute(req: Request, res: Response) {
   const credentials = req.body;
@@ -205,6 +205,8 @@ export async function getUserRoute(req: Request, res: Response) {
     return;
   }
 }
+
+
 
 //TODO: change the permission of the user
 // think what to do if the user has other permissions other than U
