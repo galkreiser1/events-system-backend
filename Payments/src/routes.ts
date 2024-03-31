@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import { IS_LOCAL } from "./const.js";
 import Coupon from "./models/coupon.js";
 import axios from "axios";
-import UserCoupon from "./models/user_coupons.js";
 import { orderPublisher, paymentPublisher, userPublisher } from "./index.js";
-import coupon from "./models/coupon.js";
 
 const EVENT_SERVICE = IS_LOCAL
   ? "http://localhost:3001"
