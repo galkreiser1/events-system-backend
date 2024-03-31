@@ -11,6 +11,7 @@ import {
   getCommentsByEventRoute,
   getNumOfCommentsByEventRoute,
 } from "./routes.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -24,6 +25,13 @@ const port = process.env.PORT || 3005;
 
 const app = express();
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 app.post(CREATE_COMMENT, createCommentRoute);
 app.get(GET_COMMENTS_BY_EVENT, getCommentsByEventRoute);

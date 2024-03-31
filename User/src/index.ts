@@ -15,7 +15,7 @@ import {
   getNumofCouponsRoute,
   getUserRoute,
   //usernameRoute,
-} from "./routes.js";
+} from "./user_routes.js";
 
 import {
   getEventRoute,
@@ -39,6 +39,12 @@ import {
 } from "./payment_routes.js";
 
 import {
+  createCommentRoute,
+  getCommentsByEventRoute,
+  getNumOfCommentsByEventRoute,
+} from "./comment_routes.js";
+
+import {
   LOGIN_PATH,
   LOGOUT_PATH,
   NEXT_EVENT_PATH,
@@ -57,6 +63,9 @@ import {
   GET_COUPON_PATH,
   CREATE_COUPON_PATH,
   BUY_PATH,
+  CREATE_COMMENT,
+  GET_COMMENTS_BY_EVENT,
+  GET_NUM_OF_COMMENTS_BY_EVENT,
 } from "./consts.js";
 
 dotenv.config();
@@ -116,6 +125,11 @@ app.get(GET_EVENTS_BY_USER_PATH, getEventsByUserRoute);
 app.get(GET_COUPON_PATH, getCouponRoute);
 app.post(CREATE_COUPON_PATH, createCouponRoute);
 app.post(BUY_PATH, buyRoute);
+
+/* COMMENT ROUTES */
+app.post(CREATE_COMMENT, createCommentRoute);
+app.get(GET_COMMENTS_BY_EVENT, getCommentsByEventRoute);
+app.get(GET_NUM_OF_COMMENTS_BY_EVENT, getNumOfCommentsByEventRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);
