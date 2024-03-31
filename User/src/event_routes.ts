@@ -43,14 +43,13 @@ export const createEventRoute = async (req: Request, res: Response) => {
   }
   try {
     const eventData = req.body;
-    console.log(eventData);
 
     const response = await axios.post(
       `${EVENT_SERVICE_URL}/api/event`,
       eventData
     );
 
-    res.json(response.data);
+    res.status(201).json(response.data);
   } catch (error) {
     console.error("Error creating event:", error);
     res.status(500).json({ error: "Internal server error" });
