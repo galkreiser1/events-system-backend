@@ -1,8 +1,8 @@
 import * as amqp from "amqplib";
 import UserCoupon from "./models/user_coupons.js";
 
-const AMQPUSER = process.env.AMQPUSER || "galkreiser";
-const AMQPPASS = process.env.AMQPPASS || "bADRRlIAm7ke6K5N";
+const AMQPUSER = process.env.AMQPUSER || "eayfadwk";
+const AMQPPASS = process.env.AMQPPASS || "dQJ0QpNDB2ihFMPsiPkfEMYba5TL2Oya";
 
 export const consumeMessages = async () => {
   try {

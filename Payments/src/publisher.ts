@@ -1,7 +1,7 @@
 import * as amqp from "amqplib";
 
-const AMQPUSER = process.env.AMQPUSER || "galkreiser";
-const AMQPPASS = process.env.AMQPPASS || "bADRRlIAm7ke6K5N";
+const AMQPUSER = process.env.AMQPUSER || "eayfadwk";
+const AMQPPASS = process.env.AMQPPASS || "dQJ0QpNDB2ihFMPsiPkfEMYba5TL2Oya";
 
 export class PublisherChannel {
   channel: amqp.Channel;
