@@ -37,7 +37,6 @@ export const createEventRoute = async (req: Request, res: Response) => {
     const newEvent = new Event(eventData);
 
     await newEvent.save();
-
     res.status(201).json(newEvent);
   } catch (error) {
     console.error("Error creating event:", error);
