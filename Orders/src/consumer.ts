@@ -74,12 +74,11 @@ const handlePaymentOrderQueue = async (
   channel: amqp.Channel,
   msg: amqp.Message
 ) => {
-  const { order_id, checkout_date, ticket_type, quantity, event_id, username } =
+  const { checkout_date, ticket_type, quantity, event_id, username } =
     JSON.parse(msg.content);
 
   try {
     const newOrder = new Order({
-      _id: order_id,
       checkout_date,
       ticket_type,
       quantity,
