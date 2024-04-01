@@ -105,13 +105,17 @@ export const buyRoute = async (req: Request, res: Response) => {
     username,
   };
 
-  await orderPublisher.sendEvent(JSON.stringify(order));
+  try {
+    await orderPublisher.sendEvent(JSON.stringify(order));
 
-  if (coupon_code) {
-    const userCoupon = { username, code: coupon_code };
-    await paymentPublisher.sendEvent(JSON.stringify(userCoupon));
+    if (coupon_code) {
+      const userCoupon = { username, code: coupon_code };
+      await paymentPublisher.sendEvent(JSON.stringify(userCoupon));
 
-    await userPublisher.sendEvent(JSON.stringify({ username }));
+      await userPublisher.sendEvent(JSON.stringify({ username }));
+    }
+  } catch (e) {
+    console.log("Error sending order event", e);
   }
 
   res.status(200).json({ order_id: order_id });
