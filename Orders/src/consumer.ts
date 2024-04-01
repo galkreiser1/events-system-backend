@@ -62,7 +62,6 @@ export const consumeMessages = async () => {
           JSON.parse(msg.content).order_id
         }`
       );
-      const order_id = JSON.parse(msg.content).order_id;
       handlePaymentOrderQueue(paymentChannel, msg);
     });
   } catch (error) {
@@ -87,6 +86,14 @@ const handlePaymentOrderQueue = async (
     });
 
     await newOrder.save();
+
+    let results = [];
+    results = await Order.find({ username });
+    let events = results.map((result) => result.event_id);
+    let userEventsDict = {};
+    userEventsDict[username] = events;
+    console.log("dict: ", userEventsDict);
+    await updateUsersNextEvent(userEventsDict);
 
     channel.ack(msg);
   } catch (error) {
@@ -118,6 +125,8 @@ const updateUsersNextEvent = async (userEventsDict: any) => {
         return earliest;
       }
     }, null);
+
+    //add if current is null
 
     const publisherMsg = {
       username: username,
