@@ -76,18 +76,28 @@ export const buyRoute = async (req: Request, res: Response) => {
     return;
   }
 
+  //   {
+  //     "cc": "374245455400126",
+  //     "holder": "Nissan Ohana",
+  //     "cvv": "111",
+  //     "exp": "05/23",
+  //     "charge": 9
+  //     }
+
   // verify payment
-  let orderId;
+  let order_id;
   try {
-    // later we will add a payment verification here
-    orderId = "65ff1d043097461f92d30968";
+    const response = await axios.post(
+      "https://www.cs-wsp.net/_functions/pay",
+      payment_details
+    );
+    order_id = response.data.paymentToken;
   } catch (error) {
     res.status(500).json({ error: "Payment failed" });
     return;
   }
 
   const order = {
-    order_id: orderId,
     checkout_date: new Date(),
     event_id: eventId,
     ticket_type,
@@ -104,7 +114,7 @@ export const buyRoute = async (req: Request, res: Response) => {
     await userPublisher.sendEvent(JSON.stringify({ username }));
   }
 
-  res.status(200).json({ order_id: orderId });
+  res.status(200).json({ order_id: order_id });
 };
 
 // export const createUserCouponRoute = async (req: Request, res: Response) => {
