@@ -87,7 +87,10 @@ const handleOrderUserQueue = async (
       channel.ack(msg);
       return;
     }
-    user.next_event = `${event.title} (${event.start_date})`;
+    const date_start_date = new Date(event.start_date);
+    user.next_event = `${event.title} (${date_start_date.toLocaleDateString(
+      "en-GB"
+    )})`;
     await user.save();
     channel.ack(msg);
   } catch (e) {
