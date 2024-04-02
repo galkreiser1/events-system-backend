@@ -21,7 +21,21 @@ export async function getEventRoute(req: Request, res: Response) {
 
 export const getAllEventsRoute = async (req: Request, res: Response) => {
   try {
-    const events = await Event.find();
+    let { page } = req.query;
+
+    if (page) {
+      page = !isNaN(parseInt(page as string, 10))
+        ? parseInt(page as string, 10)
+        : 1;
+    } else {
+      page = 1;
+    }
+
+    const eventsPerPage = 9;
+    const skip = (page - 1) * eventsPerPage;
+
+    // Fetch events for the current page
+    const events = await Event.find({}).skip(skip).limit(eventsPerPage);
 
     res.json(events);
   } catch (error) {
@@ -33,7 +47,14 @@ export const getAllEventsRoute = async (req: Request, res: Response) => {
 export const createEventRoute = async (req: Request, res: Response) => {
   try {
     const eventData = req.body;
+    const startDate = new Date(eventData.start_date);
+    const endDate = new Date(eventData.end_date);
 
+    startDate.setUTCHours(startDate.getUTCHours() + 3);
+    endDate.setUTCHours(endDate.getUTCHours() + 3);
+
+    eventData.start_date = startDate;
+    eventData.end_date = endDate;
     const newEvent = new Event(eventData);
 
     await newEvent.save();
@@ -54,9 +75,11 @@ export const updateEventDatesRoute = async (req: Request, res: Response) => {
 
     if (start_date !== undefined) {
       updateFields.start_date = start_date;
+      updateFields.setUTCHours(updateFields.getUTCHours() + 3);
     }
     if (end_date !== undefined) {
       updateFields.end_date = end_date;
+      updateFields.setUTCHours(updateFields.getUTCHours() + 3);
     }
 
     const updatedEvent = await Event.findByIdAndUpdate(
