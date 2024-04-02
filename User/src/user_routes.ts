@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { verifyToken } from "./helper_func.js";
+import { verifyToken, getUserFromCookie } from "./helper_func.js";
 import User from "./models/user.js";
+import { get } from "http";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
@@ -200,6 +201,53 @@ export async function getUserRoute(req: Request, res: Response) {
     user = await User.findOne({ username });
     const { permission } = user;
     res.status(200).send({ username: username, permission: permission });
+  } catch (e) {
+    res.status(500).send("Internal server error");
+    return;
+  }
+}
+
+export async function updateUserPermissionRoute(req: Request, res: Response) {
+  if (!verifyToken(req, res)) {
+    res.status(401).send("Not logged in");
+    return;
+  }
+  try {
+    const user = await getUserFromCookie(req);
+
+    if (user.permission !== "A") {
+      res.status(403).send("Permission denied");
+      return;
+    }
+    let targetUser = req.body.username;
+    const newPermission = req.body.permission;
+
+    if (!targetUser || !newPermission) {
+      res.status(400).send("Missing fields");
+      return;
+    }
+
+    if (
+      newPermission !== "U" &&
+      newPermission !== "A" &&
+      newPermission !== "M" &&
+      newPermission !== "W"
+    ) {
+      res.status(400).send("Invalid permission");
+      return;
+    }
+
+    targetUser = await User.findOne({ username: targetUser });
+    if (!targetUser) {
+      res.status(404).send("User not found");
+      return;
+    }
+    targetUser.permission = newPermission;
+    await targetUser.save();
+    res.status(200).send({
+      username: targetUser.username,
+      permission: targetUser.permission,
+    });
   } catch (e) {
     res.status(500).send("Internal server error");
     return;

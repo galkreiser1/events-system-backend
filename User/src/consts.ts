@@ -9,6 +9,7 @@ export const SIGNUP_PATH = "/api/signup";
 export const USERNAME_PATH = "/api/username";
 export const NEXT_EVENT_PATH = "/api/next_event";
 export const COUPONS_PATH = "/api/coupons";
+export const PERMISSION_PATH = "/api/permission";
 
 /* EVENT ROUTES */
 export const EVENT_SERVER_URL = "https://events-system-event.onrender.com";

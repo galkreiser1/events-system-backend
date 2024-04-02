@@ -14,6 +14,7 @@ import {
   getNextEventRoute,
   getNumofCouponsRoute,
   getUserRoute,
+  updateUserPermissionRoute,
   //usernameRoute,
 } from "./user_routes.js";
 
@@ -66,6 +67,7 @@ import {
   CREATE_COMMENT,
   GET_COMMENTS_BY_EVENT,
   GET_NUM_OF_COMMENTS_BY_EVENT,
+  PERMISSION_PATH,
 } from "./consts.js";
 
 dotenv.config();
@@ -107,6 +109,7 @@ app.get(NEXT_EVENT_PATH, getNextEventRoute);
 app.get(COUPONS_PATH, getNumofCouponsRoute);
 
 app.get(USERNAME_PATH, getUserRoute);
+app.post(PERMISSION_PATH, updateUserPermissionRoute);
 
 /* EVENT ROUTES */
 app.get(GET_EVENT_PATH, getEventRoute);

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import axios from "axios";
-import { verifyToken } from "./helper_func.js";
+import { verifyToken, getUserFromCookie } from "./helper_func.js";
 import { PAYMENT_SERVER_URL, IS_LOCAL } from "./consts.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "./consts.js";
@@ -35,6 +35,12 @@ export const createCouponRoute = async (req: Request, res: Response) => {
   }
 
   try {
+    const user = await getUserFromCookie(req);
+
+    if (user.permission !== "A" && user.permission !== "M") {
+      res.status(403).send("Permission denied");
+      return;
+    }
     const { code, discount } = req.body;
 
     const response = await axios.post(`${SERVER_URL}/api/payment/coupon`, {
