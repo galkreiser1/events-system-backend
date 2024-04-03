@@ -2,9 +2,9 @@ import * as amqp from "amqplib";
 import Order from "./models/order.js";
 import axios from "axios";
 import { publisherChannel } from "./index.js";
+import { IS_LOCAL } from "./const.js";
 
-const is_local = true;
-const EVENTS_SERVICE_URL = is_local
+const EVENTS_SERVICE_URL = IS_LOCAL
   ? "http://localhost:3001"
   : "https://events-system-event.onrender.com";
 
@@ -14,36 +14,90 @@ export const consumeMessages = async () => {
     const conn = await amqp.connect(
       "amqps://eayfadwk:dQJ0QpNDB2ihFMPsiPkfEMYba5TL2Oya@sparrow.rmq.cloudamqp.com/eayfadwk"
     );
-    const channel = await conn.createChannel();
+    const eventChannel = await conn.createChannel();
+    const paymentChannel = await conn.createChannel();
 
     // Declare an exchange with a name 'order_exchange' and type 'fanout'.
     // 'fanout' type broadcasts all the messages it receives to all the queues it knows.
     // `{ durable: false }` means the exchange will not survive a broker restart.
-    const exchange = "event_order_exchange";
-    await channel.assertExchange(exchange, "fanout", { durable: false });
+    const eventExchange = "event_order_exchange";
+    await eventChannel.assertExchange(eventExchange, "fanout", {
+      durable: false,
+    });
+
+    const paymentExchange = "payment_order_exchange";
+    await paymentChannel.assertExchange(paymentExchange, "fanout", {
+      durable: false,
+    });
 
     // Declare a queue with a name 'order_queue'. If it doesn't exist, it will be created.
     // `{ durable: false }` here means messages in the queue are stored in memory only, not on disk.
-    const queue = "event_order_queue";
-    await channel.assertQueue(queue, { durable: false });
+    const eventQueue = "event_order_queue";
+    await eventChannel.assertQueue(eventQueue, { durable: false });
+    const paymentQueue = "payment_order_queue";
+    await paymentChannel.assertQueue(paymentQueue, { durable: false });
 
     // Bind the declared queue to the exchange. This creates a relationship between the exchange and the queue.
     // Messages sent to this exchange will be routed to the queue according to the exchange type and routing rules.
     // The empty string as the third parameter is the routing key, which is ignored by fanout exchanges.
-    await channel.bindQueue(queue, exchange, "");
+    await eventChannel.bindQueue(eventQueue, eventExchange, "");
+    await paymentChannel.bindQueue(paymentQueue, paymentExchange, "");
 
     // Start consuming messages from the queue. The callback function is invoked whenever a message is received.
     // `msg.content.toString()` converts the message content to a string for logging or processing.
-    // `channel.ack(msg)` acknowledges the message, indicating it has been processed and can be removed from the queue.
-    await channel.consume(queue, (msg) => {
+    // `eventChannel.ack(msg)` acknowledges the message, indicating it has been processed and can be removed from the queue.
+    await eventChannel.consume(eventQueue, (msg) => {
       console.log(
-        `Comsumer >>> received message: ${JSON.parse(msg.content).event_id}`
+        `Event comsumer >>> received message: ${
+          JSON.parse(msg.content).event_id
+        }`
       );
       const event_id = JSON.parse(msg.content).event_id;
-      handleEventOrderQueue(event_id, channel, msg);
+      handleEventOrderQueue(event_id, eventChannel, msg);
+    });
+
+    await paymentChannel.consume(paymentQueue, (msg) => {
+      console.log(
+        `Payment comsumer >>> received message: ${
+          JSON.parse(msg.content).order_id
+        }`
+      );
+      handlePaymentOrderQueue(paymentChannel, msg);
     });
   } catch (error) {
     console.error(error);
+  }
+};
+
+const handlePaymentOrderQueue = async (
+  channel: amqp.Channel,
+  msg: amqp.Message
+) => {
+  const { checkout_date, ticket_type, quantity, event_id, username } =
+    JSON.parse(msg.content);
+
+  try {
+    const newOrder = new Order({
+      checkout_date,
+      ticket_type,
+      quantity,
+      event_id,
+      username,
+    });
+
+    await newOrder.save();
+
+    let results = [];
+    results = await Order.find({ username });
+    let events = results.map((result) => result.event_id);
+    let userEventsDict = {};
+    userEventsDict[username] = events;
+    console.log("dict: ", userEventsDict);
+    await updateUsersNextEvent(userEventsDict);
+
+    channel.ack(msg);
+  } catch (error) {
+    console.error("Error creating order:", error);
   }
 };
 
@@ -71,6 +125,8 @@ const updateUsersNextEvent = async (userEventsDict: any) => {
         return earliest;
       }
     }, null);
+
+    //add if current is null
 
     const publisherMsg = {
       username: username,

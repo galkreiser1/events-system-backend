@@ -14,6 +14,7 @@ import {
   getNextEventRoute,
   getNumofCouponsRoute,
   getUserRoute,
+  updateUserPermissionRoute,
   //usernameRoute,
 } from "./user_routes.js";
 
@@ -31,6 +32,12 @@ import {
   getUserOrdersRoute,
   getEventsByUserRoute,
 } from "./order_routes.js";
+
+import {
+  getCouponRoute,
+  createCouponRoute,
+  buyRoute,
+} from "./payment_routes.js";
 
 import {
   createCommentRoute,
@@ -54,9 +61,13 @@ import {
   GET_USERS_BY_EVENT_PATH,
   GET_USER_ORDERS_PATH,
   GET_EVENTS_BY_USER_PATH,
+  GET_COUPON_PATH,
+  CREATE_COUPON_PATH,
+  BUY_PATH,
   CREATE_COMMENT,
   GET_COMMENTS_BY_EVENT,
   GET_NUM_OF_COMMENTS_BY_EVENT,
+  PERMISSION_PATH,
 } from "./consts.js";
 
 dotenv.config();
@@ -98,6 +109,7 @@ app.get(NEXT_EVENT_PATH, getNextEventRoute);
 app.get(COUPONS_PATH, getNumofCouponsRoute);
 
 app.get(USERNAME_PATH, getUserRoute);
+app.post(PERMISSION_PATH, updateUserPermissionRoute);
 
 /* EVENT ROUTES */
 app.get(GET_EVENT_PATH, getEventRoute);
@@ -111,6 +123,11 @@ app.post(CREATE_ORDER_PATH, createOrderRoute);
 app.get(GET_USERS_BY_EVENT_PATH, getUsersByEventRoute);
 app.get(GET_USER_ORDERS_PATH, getUserOrdersRoute);
 app.get(GET_EVENTS_BY_USER_PATH, getEventsByUserRoute);
+
+/* PAYMENT ROUTES */
+app.get(GET_COUPON_PATH, getCouponRoute);
+app.post(CREATE_COUPON_PATH, createCouponRoute);
+app.post(BUY_PATH, buyRoute);
 
 /* COMMENT ROUTES */
 app.post(CREATE_COMMENT, createCommentRoute);

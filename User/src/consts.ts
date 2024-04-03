@@ -1,4 +1,5 @@
 export const IS_LOCAL = false;
+export const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 /* USER/AUTH ROUTES */
 export const USER_SERVER_URL = "https://events-system-users.onrender.com";
@@ -8,6 +9,7 @@ export const SIGNUP_PATH = "/api/signup";
 export const USERNAME_PATH = "/api/username";
 export const NEXT_EVENT_PATH = "/api/next_event";
 export const COUPONS_PATH = "/api/coupons";
+export const PERMISSION_PATH = "/api/permission";
 
 /* EVENT ROUTES */
 export const EVENT_SERVER_URL = "https://events-system-event.onrender.com";
@@ -30,3 +32,9 @@ export const CREATE_COMMENT = "/api/comment";
 export const GET_COMMENTS_BY_EVENT = "/api/comment/:eventId/:page";
 export const GET_NUM_OF_COMMENTS_BY_EVENT = "/api/comment/:eventId/num";
 export const GET_EVENTS_BY_USER_PATH = "/api/order/events/:username";
+
+/* PAYMENT ROUTES */
+export const PAYMENT_SERVER_URL = "https://events-system-payment.onrender.com";
+export const CREATE_COUPON_PATH = "/api/payment/coupon";
+export const GET_COUPON_PATH = "/api/payment/coupon/:code";
+export const BUY_PATH = "/api/payment/buy";

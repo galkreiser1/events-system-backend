@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import axios from "axios";
-import { verifyToken } from "./helper_func.js";
+import { verifyToken, getUserFromCookie } from "./helper_func.js";
 import { EVENT_SERVER_URL, IS_LOCAL } from "./consts.js";
 
 const EVENT_SERVICE_URL = IS_LOCAL ? "http://localhost:3001" : EVENT_SERVER_URL;
@@ -27,8 +27,21 @@ export const getAllEventsRoute = async (req: Request, res: Response) => {
     res.status(401).send("Not logged in");
     return;
   }
+
+  let { page } = req.query;
+
+  if (page) {
+    page = !isNaN(parseInt(page as string, 10))
+      ? parseInt(page as string, 10)
+      : 1;
+  } else {
+    page = 1;
+  }
+
   try {
-    const response = await axios.get(`${EVENT_SERVICE_URL}/api/event`);
+    const response = await axios.get(
+      `${EVENT_SERVICE_URL}/api/event?page=${page}`
+    );
     res.json(response.data);
   } catch (error) {
     console.error("Error fetching event:", error);
@@ -42,15 +55,19 @@ export const createEventRoute = async (req: Request, res: Response) => {
     return;
   }
   try {
-    const eventData = req.body;
-    console.log(eventData);
+    const user = await getUserFromCookie(req);
 
+    if (user.permission !== "A" && user.permission !== "M") {
+      res.status(403).send("Permission denied");
+      return;
+    }
+    const eventData = req.body;
     const response = await axios.post(
       `${EVENT_SERVICE_URL}/api/event`,
       eventData
     );
 
-    res.json(response.data);
+    res.status(201).json(response.data);
   } catch (error) {
     console.error("Error creating event:", error);
     res.status(500).json({ error: "Internal server error" });

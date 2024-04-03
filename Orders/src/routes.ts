@@ -35,15 +35,17 @@ export const getUserOrdersRoute = async (req: Request, res: Response) => {
 };
 
 export const createOrderRoute = async (req: Request, res: Response) => {
-  const { checkout_date, ticket_type, quantity, event_id, user_id } = req.body;
+  const { order_id, checkout_date, ticket_type, quantity, event_id, username } =
+    req.body;
 
   try {
     const newOrder = new Order({
+      _id: order_id,
       checkout_date,
       ticket_type,
       quantity,
       event_id,
-      user_id,
+      username,
     });
 
     await newOrder.save();
