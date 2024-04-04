@@ -131,8 +131,8 @@ app.post(BUY_PATH, buyRoute);
 
 /* COMMENT ROUTES */
 app.post(CREATE_COMMENT, createCommentRoute);
-app.get(GET_COMMENTS_BY_EVENT, getCommentsByEventRoute);
 app.get(GET_NUM_OF_COMMENTS_BY_EVENT, getNumOfCommentsByEventRoute);
+app.get(GET_COMMENTS_BY_EVENT, getCommentsByEventRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);
