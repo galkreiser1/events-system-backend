@@ -4,11 +4,10 @@ import { verifyToken } from "./helper_func.js";
 import { COMMENTS_SERVER_URL } from "./consts.js";
 
 export const createCommentRoute = async (req: Request, res: Response) => {
-  // TODO: uncomment after debugging
-  //   if (!verifyToken(req, res)) {
-  //     res.status(401).send("Not logged in");
-  //     return;
-  //   }
+  if (!verifyToken(req, res)) {
+    res.status(401).send("Not logged in");
+    return;
+  }
 
   // TODO: should be here or on the routes?
   // validate request body:
