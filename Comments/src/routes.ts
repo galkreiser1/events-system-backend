@@ -36,7 +36,7 @@ export async function getCommentsByEventRoute(req: Request, res: Response) {
   const limit = 5;
 
   try {
-    const comments = await Comment.find({ eventId })
+    const comments = await Comment.find({ event_id: eventId })
       .skip((pageNumber - 1) * limit)
       .limit(limit);
 
@@ -58,9 +58,12 @@ export async function getNumOfCommentsByEventRoute(
   //   }
 
   try {
-    const count = await Comment.countDocuments({ eventId: eventId });
+    const count = await Comment.countDocuments({ event_id: eventId });
+    console.log(count);
     res.status(200).send(count.toString());
   } catch (e) {
+    console.log(e);
+
     res.status(500).send("Internal server error");
   }
 }
