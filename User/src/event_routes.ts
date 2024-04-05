@@ -134,6 +134,11 @@ export const updateTicketRoute = async (req: Request, res: Response) => {
 
     res.json(response.data);
   } catch (error) {
+    if (error.response.status === 400) {
+      return res
+        .status(400)
+        .json({ error: "Ticket quantity cannot go below 0" });
+    }
     console.error("Error updating ticket quantity:", error);
     res.status(500).json({ error: "Internal server error" });
   }
