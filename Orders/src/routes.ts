@@ -29,7 +29,7 @@ export const getUserOrdersRoute = async (req: Request, res: Response) => {
 
     res.status(200).json(ordersWithEvents);
   } catch (error) {
-    console.error("Error fetching orders:", error);
+    console.log("Error fetching orders:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -52,7 +52,7 @@ export const createOrderRoute = async (req: Request, res: Response) => {
 
     res.status(201).json(newOrder);
   } catch (error) {
-    console.error("Error creating order:", error);
+    console.log("Error creating order:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -69,7 +69,7 @@ export const getUsersByEventRoute = async (req: Request, res: Response) => {
 
     res.status(200).json(uniqueUsernames);
   } catch (error) {
-    console.error("Error fetching user IDs:", error);
+    console.log("Error fetching user IDs:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -86,7 +86,7 @@ export const getEventsByUserRoute = async (req: Request, res: Response) => {
 
     res.status(200).json(uniqueEvents);
   } catch (error) {
-    console.error("Error fetching user IDs:", error);
+    console.log("Error fetching user IDs:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
