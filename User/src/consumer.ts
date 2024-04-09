@@ -52,7 +52,7 @@ export const consumeMessages = async () => {
       handlePaymentUserQueue(paymentChannel, msg);
     });
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
   }
 };
 
@@ -68,7 +68,7 @@ const handlePaymentUserQueue = async (
     await user.save();
     channel.ack(msg);
   } catch (e) {
-    console.error(e);
+    console.log(e.message);
   }
 };
 
@@ -99,6 +99,6 @@ const handleOrderUserQueue = async (
     await user.save();
     channel.ack(msg);
   } catch (e) {
-    console.error(e);
+    console.log(e.message);
   }
 };
