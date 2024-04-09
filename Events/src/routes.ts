@@ -50,6 +50,13 @@ export const createEventRoute = async (req: Request, res: Response) => {
     const startDate = new Date(eventData.start_date);
     const endDate = new Date(eventData.end_date);
 
+    if (startDate.getTimezoneOffset() === 0) {
+      startDate.setUTCHours(startDate.getUTCHours() + 2);
+    }
+    if (endDate.getTimezoneOffset() === 0) {
+      endDate.setUTCHours(endDate.getUTCHours() + 2);
+    }
+
     startDate.setUTCHours(startDate.getUTCHours() + 3);
     endDate.setUTCHours(endDate.getUTCHours() + 3);
 
@@ -74,12 +81,20 @@ export const updateEventDatesRoute = async (req: Request, res: Response) => {
     const updateFields: any = {};
 
     if (start_date !== undefined) {
-      updateFields.start_date = start_date;
-      updateFields.setUTCHours(updateFields.getUTCHours() + 3);
+      updateFields.start_date = new Date(start_date);
+      if (updateFields.start_date.getTimezoneOffset() === 0) {
+        updateFields.start_date.setUTCHours(
+          updateFields.start_date.getUTCHours() + 2
+        );
+      }
     }
     if (end_date !== undefined) {
-      updateFields.end_date = end_date;
-      updateFields.setUTCHours(updateFields.getUTCHours() + 3);
+      updateFields.end_date = new Date(end_date);
+      if (updateFields.end_date.getTimezoneOffset() === 0) {
+        updateFields.end_date.setUTCHours(
+          updateFields.end_date.getUTCHours() + 2
+        );
+      }
     }
 
     const updatedEvent = await Event.findByIdAndUpdate(
