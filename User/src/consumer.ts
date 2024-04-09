@@ -78,7 +78,7 @@ const handleOrderUserQueue = async (
 ) => {
   try {
     const { username, event } = JSON.parse(msg.content);
-    if (!username || !event) {
+    if (!username) {
       channel.ack(msg);
       return;
     }
@@ -87,10 +87,15 @@ const handleOrderUserQueue = async (
       channel.ack(msg);
       return;
     }
-    const date_start_date = new Date(event.start_date);
-    user.next_event = `${event.title} (${date_start_date.toLocaleDateString(
-      "en-GB"
-    )})`;
+
+    user.next_event = "";
+
+    if (event) {
+      const date_start_date = new Date(event.start_date);
+      user.next_event = `${event.title} (${date_start_date.toLocaleDateString(
+        "en-GB"
+      )})`;
+    }
     await user.save();
     channel.ack(msg);
   } catch (e) {
