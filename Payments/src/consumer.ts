@@ -36,7 +36,7 @@ export const consumeMessages = async () => {
       handlePaymentQueue(channel, msg);
     });
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
   }
 };
 

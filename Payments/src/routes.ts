@@ -22,7 +22,7 @@ export const createCouponRoute = async (req: Request, res: Response) => {
       res.status(400).json({ error: "Coupon already exists" });
       return;
     }
-    console.error("Error creating order:", error);
+    console.log("Error creating order:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -135,7 +135,7 @@ export const buyRoute = async (req: Request, res: Response) => {
 //       res.status(400).json({ error: "User Coupon Combo already exists" });
 //       return;
 //     }
-//     console.error("Error creating order:", error);
+//     console.log("Error creating order:", error);
 //     res.status(500).json({ error: "Internal server error" });
 //   }
 // };
