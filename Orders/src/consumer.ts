@@ -65,7 +65,7 @@ export const consumeMessages = async () => {
       handlePaymentOrderQueue(paymentChannel, msg);
     });
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
   }
 };
 
@@ -97,7 +97,7 @@ const handlePaymentOrderQueue = async (
 
     channel.ack(msg);
   } catch (error) {
-    console.error("Error creating order:", error);
+    console.log("Error creating order:", error.message);
   }
 };
 
@@ -126,8 +126,6 @@ const updateUsersNextEvent = async (userEventsDict: any) => {
       }
     }, null);
 
-    //add if current is null
-
     const publisherMsg = {
       username: username,
       event: earliestEvent,
@@ -145,17 +143,20 @@ const handleEventOrderQueue = async (
   let results = [];
   try {
     results = await Order.find({ event_id });
-    let users = results.map((result) => result.username);
-    let userEventsDict = {};
-    for (const username of users) {
-      let users = await Order.find({ username });
-      const userEvents = [...new Set(users.map((event) => event.event_id))];
-      userEventsDict[username] = userEvents;
+    if (results && results.length > 0) {
+      let users = results.map((result) => result.username);
+      let userEventsDict = {};
+      for (const username of users) {
+        let users = await Order.find({ username });
+        const userEvents = [...new Set(users.map((event) => event.event_id))];
+        userEventsDict[username] = userEvents;
+      }
+
+      await updateUsersNextEvent(userEventsDict);
     }
 
-    await updateUsersNextEvent(userEventsDict);
     channel.ack(msg);
   } catch (e) {
-    console.error("Error fetching users by event:", e);
+    console.log("Error fetching users by event:", e.message);
   }
 };
