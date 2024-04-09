@@ -39,7 +39,7 @@ export const getAllEventsRoute = async (req: Request, res: Response) => {
 
     res.json(events);
   } catch (error) {
-    console.error("Error retrieving events:", error);
+    console.log("Error retrieving events:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -67,7 +67,7 @@ export const createEventRoute = async (req: Request, res: Response) => {
     await newEvent.save();
     res.status(201).json(newEvent);
   } catch (error) {
-    console.error("Error creating event:", error);
+    console.log("Error creating event:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -111,7 +111,7 @@ export const updateEventDatesRoute = async (req: Request, res: Response) => {
 
     return res.status(200).json({ event: updatedEvent });
   } catch (error) {
-    console.error("Error updating event dates:", error);
+    console.log("Error updating event dates:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -154,7 +154,7 @@ export const updateTicketQuantityRoute = async (
 
     res.json(event);
   } catch (error) {
-    console.error("Error updating ticket quantity:", error);
+    console.log("Error updating ticket quantity:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
