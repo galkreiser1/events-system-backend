@@ -48,6 +48,6 @@ const handlePaymentQueue = async (channel: amqp.Channel, msg: amqp.Message) => {
     console.log(`UserCoupon saved: ${userCoupon}`);
     channel.ack(msg);
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
   }
 };
