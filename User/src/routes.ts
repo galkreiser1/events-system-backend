@@ -5,7 +5,6 @@ import { verifyToken } from "./helper_func.js";
 import User from "./models/user.js";
 import { JWT_SECRET } from "./consts.js";
 
-
 export async function loginRoute(req: Request, res: Response) {
   const credentials = req.body;
   try {
@@ -44,7 +43,11 @@ export async function loginRoute(req: Request, res: Response) {
 
 export async function logoutRoute(req: Request, res: Response) {
   const secure = process.env.NODE_ENV === "production";
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  });
 
   res.status(200).send("Logged out");
 }
@@ -205,8 +208,6 @@ export async function getUserRoute(req: Request, res: Response) {
     return;
   }
 }
-
-
 
 //TODO: change the permission of the user
 // think what to do if the user has other permissions other than U
