@@ -53,7 +53,7 @@ export async function logoutRoute(req: Request, res: Response) {
     sameSite: "none",
   });
 
-  res.status(200).send("Logged out");
+  res.status(200).send("Logged out. Cleared cookie.");
 }
 
 export async function signupRoute(req: Request, res: Response) {
