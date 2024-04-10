@@ -17,6 +17,7 @@ import {
 } from "./routes.js";
 
 import { PublisherChannel } from "./publisher.js";
+import { config } from "./config.js";
 
 dotenv.config();
 
@@ -24,8 +25,8 @@ export const publisherChannel = new PublisherChannel();
 
 let dbUri;
 
-const DBUSER = process.env.DBUSER || "galkreiser";
-const DBPASS = process.env.DBPASS || "bADRRlIAm7ke6K5N";
+const DBUSER = process.env.DBUSER || config.DBUSER;
+const DBPASS = process.env.DBPASS || config.DBPASS;
 
 dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
 
