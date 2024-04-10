@@ -114,17 +114,18 @@ const updateUsersNextEvent = async (userEventsDict: any) => {
       })
     );
 
-    const earliestEvent = userEvents.reduce((earliest, current) => {
-      if (new Date(current.start_date) >= new Date()) {
-        if (
-          !earliest ||
-          new Date(current.start_date) < new Date(earliest.start_date)
-        ) {
-          return current;
-        }
-        return earliest;
-      }
-    }, null);
+    const filteredEvents = userEvents.filter((event) => {
+      return new Date(event.start_date) > new Date();
+    });
+
+    let earliestEvent = null;
+    if (filteredEvents.length > 0) {
+      earliestEvent = filteredEvents.reduce((prev, current) =>
+        new Date(prev.start_date) < new Date(current.start_date)
+          ? prev
+          : current
+      );
+    }
 
     const publisherMsg = {
       username: username,
