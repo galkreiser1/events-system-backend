@@ -44,8 +44,14 @@ export async function loginRoute(req: Request, res: Response) {
 }
 
 export async function logoutRoute(req: Request, res: Response) {
-  const secure = process.env.NODE_ENV === "production";
-  res.clearCookie("token");
+  const secure = process.env.NODE_ENV
+    ? process.env.NODE_ENV === "production"
+    : true;
+  res.clearCookie("token", {
+    secure,
+    httpOnly: true,
+    sameSite: "none",
+  });
 
   res.status(200).send("Logged out");
 }
