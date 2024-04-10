@@ -4,6 +4,11 @@ import axios from "axios";
 import { publisherChannel } from "./index.js";
 import { IS_LOCAL } from "./const.js";
 
+import { config } from "./config.js";
+
+const AMQPUSER = process.env.AMQPUSER || config.AMQPUSER;
+const AMQPPASS = process.env.AMQPPASS || config.AMQPPASS;
+
 const EVENTS_SERVICE_URL = IS_LOCAL
   ? "http://localhost:3001"
   : "https://events-system-event.onrender.com";
@@ -12,7 +17,7 @@ export const consumeMessages = async () => {
   try {
     // connect to RabbitMQ
     const conn = await amqp.connect(
-      "amqps://eayfadwk:dQJ0QpNDB2ihFMPsiPkfEMYba5TL2Oya@sparrow.rmq.cloudamqp.com/eayfadwk"
+      `amqps://${AMQPUSER}:${AMQPPASS}@sparrow.rmq.cloudamqp.com/eayfadwk`
     );
     const eventChannel = await conn.createChannel();
     const paymentChannel = await conn.createChannel();

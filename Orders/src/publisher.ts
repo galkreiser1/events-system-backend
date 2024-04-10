@@ -1,12 +1,17 @@
 import * as amqp from "amqplib";
 
+import { config } from "./config.js";
+
+const AMQPUSER = process.env.AMQPUSER || config.AMQPUSER;
+const AMQPPASS = process.env.AMQPPASS || config.AMQPPASS;
+
 export class PublisherChannel {
   channel: amqp.Channel;
 
   // Method to create a channel on the RabbitMQ connection
   async createChannel() {
     const connection = await amqp.connect(
-      "amqps://eayfadwk:dQJ0QpNDB2ihFMPsiPkfEMYba5TL2Oya@sparrow.rmq.cloudamqp.com/eayfadwk"
+      `amqps://${AMQPUSER}:${AMQPPASS}@sparrow.rmq.cloudamqp.com/eayfadwk`
     );
     // Create a channel on this connection
     this.channel = await connection.createChannel();
