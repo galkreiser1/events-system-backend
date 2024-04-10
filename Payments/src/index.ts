@@ -5,6 +5,7 @@ import { CREATE_COUPON, GET_COUPON, BUY } from "./const.js";
 import { createCouponRoute, getCouponRoute, buyRoute } from "./routes.js";
 import { PublisherChannel } from "./publisher.js";
 import { consumeMessages } from "./consumer.js";
+import { config } from "./config.js";
 
 dotenv.config();
 
@@ -16,8 +17,8 @@ export const userPublisher = new PublisherChannel("payment_user_exchange");
 
 let dbUri;
 
-const DBUSER = process.env.DBUSER || "galkreiser";
-const DBPASS = process.env.DBPASS || "bADRRlIAm7ke6K5N";
+const DBUSER = process.env.DBUSER || config.DBUSER;
+const DBPASS = process.env.DBPASS || config.DBPASS;
 
 dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
 

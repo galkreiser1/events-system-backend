@@ -1,7 +1,8 @@
 import * as amqp from "amqplib";
+import { config } from "./config.js";
 
-const AMQPUSER = process.env.AMQPUSER || "eayfadwk";
-const AMQPPASS = process.env.AMQPPASS || "dQJ0QpNDB2ihFMPsiPkfEMYba5TL2Oya";
+const AMQPUSER = process.env.AMQPUSER || config.AMQPUSER;
+const AMQPPASS = process.env.AMQPPASS || config.AMQPPASS;
 
 export class PublisherChannel {
   channel: amqp.Channel;
