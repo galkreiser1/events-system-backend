@@ -8,7 +8,7 @@ const ORDERS_SERVICE_URL = IS_LOCAL
   : ORDERS_SERVER_URL;
 
 export const createOrderRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
@@ -28,7 +28,7 @@ export const createOrderRoute = async (req: Request, res: Response) => {
 };
 
 export const getUsersByEventRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
@@ -66,7 +66,7 @@ export const getUserOrdersRoute = async (req: Request, res: Response) => {
 };
 
 export const getEventsByUserRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }

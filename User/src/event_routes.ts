@@ -6,7 +6,7 @@ import { EVENT_SERVER_URL, IS_LOCAL } from "./consts.js";
 const EVENT_SERVICE_URL = IS_LOCAL ? "http://localhost:3001" : EVENT_SERVER_URL;
 
 export const getEventRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
@@ -23,7 +23,7 @@ export const getEventRoute = async (req: Request, res: Response) => {
 };
 
 export const getAllEventsRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
@@ -50,7 +50,7 @@ export const getAllEventsRoute = async (req: Request, res: Response) => {
 };
 
 export const createEventRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
@@ -75,7 +75,7 @@ export const createEventRoute = async (req: Request, res: Response) => {
 };
 
 export const updateEventDateRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
@@ -110,7 +110,7 @@ export const updateEventDateRoute = async (req: Request, res: Response) => {
 };
 
 export const updateTicketRoute = async (req: Request, res: Response) => {
-  if (!verifyToken(req, res) && !req.headers["admin"]) {
+  if (!verifyToken(req, res)) {
     res.status(401).send("Not logged in");
     return;
   }
