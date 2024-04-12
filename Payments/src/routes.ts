@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import { IS_LOCAL } from "./const.js";
 import Coupon from "./models/coupon.js";
 import axios from "axios";
-import { orderPublisher, paymentPublisher, userPublisher } from "./index.js";
+import { orderPublisher, paymentPublisher } from "./index.js";
 import { config } from "./config.js";
+
+const API_KEY = process.env.API_KEY || config.API_KEY;
 
 const EVENT_SERVICE = IS_LOCAL
   ? "http://localhost:3001"
@@ -68,7 +70,7 @@ export const buyRoute = async (req: Request, res: Response) => {
   try {
     const response = await axios.get(`${EVENT_SERVICE}/api/event/${eventId}`, {
       headers: {
-        Authorization: `Bearer ${config.API_KEY}`,
+        Authorization: `Bearer ${API_KEY}`,
       },
     });
     const updatedEvent = response.data;
@@ -86,7 +88,7 @@ export const buyRoute = async (req: Request, res: Response) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${config.API_KEY}`,
+          Authorization: `Bearer ${API_KEY}`,
         },
       }
     );
@@ -111,7 +113,7 @@ export const buyRoute = async (req: Request, res: Response) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${config.API_KEY}`,
+          Authorization: `Bearer ${API_KEY}`,
         },
       }
     );
