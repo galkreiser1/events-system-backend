@@ -3,6 +3,7 @@ import { IS_LOCAL } from "./const.js";
 import Coupon from "./models/coupon.js";
 import axios from "axios";
 import { orderPublisher, paymentPublisher, userPublisher } from "./index.js";
+import { config } from "./config.js";
 
 const EVENT_SERVICE = IS_LOCAL
   ? "http://localhost:3001"
@@ -65,7 +66,11 @@ export const buyRoute = async (req: Request, res: Response) => {
   } = req.body;
   const eventId = event._id;
   try {
-    const response = await axios.get(`${EVENT_SERVICE}/api/event/${eventId}`);
+    const response = await axios.get(`${EVENT_SERVICE}/api/event/${eventId}`, {
+      headers: {
+        Authorization: `Bearer ${config.API_KEY}`,
+      },
+    });
     const updatedEvent = response.data;
     if (!compareEvents(event, updatedEvent)) {
       res.status(409).json({ error: "Event has changed" });
@@ -73,10 +78,18 @@ export const buyRoute = async (req: Request, res: Response) => {
     }
   } catch (error) {
     const negativeQuantity = -1 * quantity;
-    axios.put(`${EVENT_SERVICE}/api/event/${eventId}/ticket`, {
-      ticket_type,
-      negativeQuantity,
-    });
+    axios.put(
+      `${EVENT_SERVICE}/api/event/${eventId}/ticket`,
+      {
+        ticket_type,
+        negativeQuantity,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${config.API_KEY}`,
+        },
+      }
+    );
     res.status(500).json({ error: "Interal server error" });
     return;
   }
@@ -90,10 +103,18 @@ export const buyRoute = async (req: Request, res: Response) => {
     order_id = response.data.paymentToken;
   } catch (error) {
     const negativeQuantity = -1 * quantity;
-    axios.put(`${EVENT_SERVICE}/api/event/${eventId}/ticket`, {
-      ticket_type,
-      quantity: negativeQuantity,
-    });
+    axios.put(
+      `${EVENT_SERVICE}/api/event/${eventId}/ticket`,
+      {
+        ticket_type,
+        quantity: negativeQuantity,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${config.API_KEY}`,
+        },
+      }
+    );
 
     res.status(500).json({ error: "Payment failed" });
     return;
