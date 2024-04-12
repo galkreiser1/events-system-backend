@@ -1,12 +1,13 @@
 import * as mongoose from "mongoose";
 
-interface ticketType {
+export interface ticketType {
   type: string;
   quantity: number;
   price: number;
 }
 
-interface eventType {
+export interface eventType {
+  _id?: string;
   title: string;
   category: string;
   description: string;

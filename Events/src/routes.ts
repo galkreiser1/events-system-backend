@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Event from "./models/event.js";
+import TicketLock from "./models/ticketlock.js";
 import { publisherChannel } from "./index.js";
 
 export async function getEventRoute(req: Request, res: Response) {
@@ -137,7 +138,10 @@ export const updateTicketQuantityRoute = async (
         .json({ error: "Ticket type not found for the event" });
     }
 
+    console.log("subtract quantity: ", quantity);
+    console.log("current quantity: ", event.tickets[ticketIndex].quantity);
     const updatedQuantity = event.tickets[ticketIndex].quantity - quantity;
+    console.log("updated quantity: ", updatedQuantity);
 
     if (updatedQuantity < 0) {
       return res
@@ -152,6 +156,101 @@ export const updateTicketQuantityRoute = async (
     res.json(event);
   } catch (error) {
     console.log("Error updating ticket quantity:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const lockTicketRoute = async (req: Request, res: Response) => {
+  console.log("locking");
+  const { username, event_id, type, quantity } = req.body;
+
+  try {
+    const event = await Event.findById(event_id);
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    const ticketIndex = event.tickets.findIndex(
+      (ticket) => ticket.type === type
+    );
+
+    if (ticketIndex === -1) {
+      console.log("Ticket type not found");
+      return res.status(404).json({ error: "Ticket type not found" });
+    }
+
+    const ticket = event.tickets[ticketIndex];
+
+    let lockedTicketsQuantity = await TicketLock.aggregate([
+      {
+        $match: {
+          event_id,
+          type,
+          expiresAt: { $gt: new Date() },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$quantity" },
+        },
+      },
+    ]);
+
+    const lockedQuantity = lockedTicketsQuantity[0]?.total || 0;
+    const unlockedQuantity = ticket.quantity - lockedQuantity;
+
+    if (unlockedQuantity < quantity) {
+      return res.status(400).json({ error: "Not enough tickets available" });
+    }
+
+    const newLock = new TicketLock({
+      username,
+      event_id,
+      type,
+      quantity,
+    });
+
+    await newLock.save();
+
+    console.log("lock created");
+    res.status(201).json({ lock_id: newLock._id });
+  } catch (error) {
+    console.log("Error locking ticket:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const unLockTicketRoute = async (req: Request, res: Response) => {
+  const { lock_id, event_id, type, quantity } = req.body;
+
+  console.log("unlocking lock_id", lock_id);
+
+  try {
+    await TicketLock.findByIdAndDelete(lock_id);
+
+    const event = await Event.findById(event_id);
+    const ticketIndex = event.tickets.findIndex(
+      (ticket) => ticket.type === type
+    );
+    if (ticketIndex === -1) {
+      return res
+        .status(404)
+        .json({ error: "Ticket type not found for the event" });
+    }
+    const updatedQuantity = event.tickets[ticketIndex].quantity - quantity;
+    if (updatedQuantity < 0) {
+      return res
+        .status(400)
+        .json({ error: "Ticket quantity cannot go below 0" });
+    }
+    event.tickets[ticketIndex].quantity = updatedQuantity;
+    await event.save();
+
+    res.status(200).json({ message: "Lock removed" });
+  } catch (error) {
+    console.log("Error unlocking ticket:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
