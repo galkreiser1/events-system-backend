@@ -27,6 +27,7 @@ let dbUri;
 
 const DBUSER = process.env.DBUSER || config.DBUSER;
 const DBPASS = process.env.DBPASS || config.DBPASS;
+const API_KEY = process.env.API_KEY || config.API_KEY;
 
 dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
 
@@ -37,6 +38,24 @@ const port = process.env.PORT || 3002;
 
 const app = express();
 app.use(express.json());
+
+const apiKeyMiddleware = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+
+    if (token === API_KEY) {
+      next();
+    } else {
+      res.status(401).json({ error: "Unauthorized" });
+    }
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+};
+
+app.use(apiKeyMiddleware);
 
 app.post(CREATE_ORDER, createOrderRoute);
 app.get(GET_USER_ORDERS, getUserOrdersRoute);

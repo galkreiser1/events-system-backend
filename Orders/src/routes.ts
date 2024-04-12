@@ -2,10 +2,13 @@ import { Request, Response } from "express";
 import Order from "./models/order.js";
 import axios from "axios";
 import { IS_LOCAL } from "./const.js";
+import { config } from "./config.js";
 
 const EVENTS_SERVICE_URL = IS_LOCAL
   ? "http://localhost:3001"
   : "https://events-system-event.onrender.com";
+
+const API_KEY = process.env.API_KEY || config.API_KEY;
 
 export const getUserOrdersRoute = async (req: Request, res: Response) => {
   const username = req.params.username;
@@ -16,7 +19,12 @@ export const getUserOrdersRoute = async (req: Request, res: Response) => {
     const ordersWithEvents = await Promise.all(
       orders.map(async (order) => {
         const eventResponse = await axios.get(
-          `${EVENTS_SERVICE_URL}/api/event/${order.event_id}`
+          `${EVENTS_SERVICE_URL}/api/event/${order.event_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${API_KEY}`,
+            },
+          }
         );
         const event = eventResponse.data;
         delete event._id;

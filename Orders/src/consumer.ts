@@ -97,7 +97,6 @@ const handlePaymentOrderQueue = async (
     let events = results.map((result) => result.event_id);
     let userEventsDict = {};
     userEventsDict[username] = events;
-    console.log("dict: ", userEventsDict);
     await updateUsersNextEvent(userEventsDict);
 
     channel.ack(msg);
@@ -113,7 +112,12 @@ const updateUsersNextEvent = async (userEventsDict: any) => {
     const userEvents = await Promise.all(
       eventIds.map(async (eventId) => {
         const event = await axios.get(
-          `${EVENTS_SERVICE_URL}/api/event/${eventId}`
+          `${EVENTS_SERVICE_URL}/api/event/${eventId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${config.API_KEY}`,
+            },
+          }
         );
         return event.data;
       })
