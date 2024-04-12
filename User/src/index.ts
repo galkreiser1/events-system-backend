@@ -24,6 +24,8 @@ import {
   createEventRoute,
   updateEventDateRoute,
   updateTicketRoute,
+  lockTicketRoute,
+  unlockTicketRoute,
 } from "./event_routes.js";
 
 import {
@@ -68,6 +70,8 @@ import {
   GET_COMMENTS_BY_EVENT,
   GET_NUM_OF_COMMENTS_BY_EVENT,
   PERMISSION_PATH,
+  LOCK_TICKET_PATH,
+  UNLOCK_TICKET_PATH,
 } from "./consts.js";
 
 dotenv.config();
@@ -117,6 +121,8 @@ app.get(GET_ALL_EVENTS_PATH, getAllEventsRoute);
 app.post(CREATE_EVENT_PATH, createEventRoute);
 app.put(UPDATE_EVENT_DATE_PATH, updateEventDateRoute);
 app.put(UPDATE_EVENT_TICKET_PATH, updateTicketRoute);
+app.post(LOCK_TICKET_PATH, lockTicketRoute);
+app.post(UNLOCK_TICKET_PATH, unlockTicketRoute);
 
 /*ORDER ROUTES*/
 app.post(CREATE_ORDER_PATH, createOrderRoute);

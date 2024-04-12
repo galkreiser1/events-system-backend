@@ -4,6 +4,7 @@ import { verifyToken, getUserFromCookie } from "./helper_func.js";
 import { PAYMENT_SERVER_URL, IS_LOCAL } from "./consts.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "./consts.js";
+import { config } from "./config.js";
 
 const SERVER_URL = IS_LOCAL ? "http://localhost:3003" : PAYMENT_SERVER_URL;
 
@@ -15,7 +16,8 @@ export const getCouponRoute = async (req: Request, res: Response) => {
   try {
     const code = req.params.code;
     const response = await axios.get(
-      `${SERVER_URL}/api/payment/coupon/${code}`
+      `${SERVER_URL}/api/payment/coupon/${code}`,
+      config.API_KEY_HEADER
     );
     res.json(response.data);
   } catch (error) {
@@ -43,10 +45,14 @@ export const createCouponRoute = async (req: Request, res: Response) => {
     }
     const { code, discount } = req.body;
 
-    const response = await axios.post(`${SERVER_URL}/api/payment/coupon`, {
-      code,
-      discount,
-    });
+    const response = await axios.post(
+      `${SERVER_URL}/api/payment/coupon`,
+      {
+        code,
+        discount,
+      },
+      config.API_KEY_HEADER
+    );
 
     res.status(201).json(response.data);
   } catch (error) {
@@ -73,14 +79,18 @@ export const buyRoute = async (req: Request, res: Response) => {
     req.body;
 
   try {
-    const response = await axios.post(`${SERVER_URL}/api/payment/buy`, {
-      event,
-      ticket_type,
-      quantity,
-      username,
-      payment_details,
-      coupon_code,
-    });
+    const response = await axios.post(
+      `${SERVER_URL}/api/payment/buy`,
+      {
+        event,
+        ticket_type,
+        quantity,
+        username,
+        payment_details,
+        coupon_code,
+      },
+      config.API_KEY_HEADER
+    );
 
     res.status(201).json(response.data);
   } catch (error) {

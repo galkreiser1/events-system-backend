@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 import { verifyToken, getUsernameFromCookie } from "./helper_func.js";
 import { ORDERS_SERVER_URL, IS_LOCAL } from "./consts.js";
+import { config } from "./config.js";
 
 const ORDERS_SERVICE_URL = IS_LOCAL
   ? "http://localhost:3002"
@@ -17,7 +18,8 @@ export const createOrderRoute = async (req: Request, res: Response) => {
 
     const response = await axios.post(
       `${ORDERS_SERVICE_URL}/api/order`,
-      orderData
+      orderData,
+      config.API_KEY_HEADER
     );
 
     res.json(response.data);
@@ -36,7 +38,8 @@ export const getUsersByEventRoute = async (req: Request, res: Response) => {
     const eventId = req.params.eventId;
 
     const response = await axios.get(
-      `${ORDERS_SERVICE_URL}/api/order/users/${eventId}`
+      `${ORDERS_SERVICE_URL}/api/order/users/${eventId}`,
+      config.API_KEY_HEADER
     );
 
     res.json(response.data);
@@ -55,7 +58,8 @@ export const getUserOrdersRoute = async (req: Request, res: Response) => {
     const username = getUsernameFromCookie(req);
 
     const response = await axios.get(
-      `${ORDERS_SERVICE_URL}/api/order/${username}`
+      `${ORDERS_SERVICE_URL}/api/order/${username}`,
+      config.API_KEY_HEADER
     );
 
     res.json(response.data);
@@ -74,7 +78,8 @@ export const getEventsByUserRoute = async (req: Request, res: Response) => {
     const username = req.params.username;
 
     const response = await axios.get(
-      `${ORDERS_SERVICE_URL}/api/order/events/${username}`
+      `${ORDERS_SERVICE_URL}/api/order/events/${username}`,
+      config.API_KEY_HEADER
     );
 
     res.json(response.data);

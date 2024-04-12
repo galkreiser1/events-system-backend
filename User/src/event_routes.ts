@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 import { verifyToken, getUserFromCookie } from "./helper_func.js";
 import { EVENT_SERVER_URL, IS_LOCAL } from "./consts.js";
+import { config } from "./config.js";
 
 const EVENT_SERVICE_URL = IS_LOCAL ? "http://localhost:3001" : EVENT_SERVER_URL;
 
@@ -13,7 +14,8 @@ export const getEventRoute = async (req: Request, res: Response) => {
   try {
     const eventId = req.params.id;
     const response = await axios.get(
-      `${EVENT_SERVICE_URL}/api/event/${eventId}`
+      `${EVENT_SERVICE_URL}/api/event/${eventId}`,
+      config.API_KEY_HEADER
     );
     res.json(response.data);
   } catch (error) {
@@ -40,7 +42,8 @@ export const getAllEventsRoute = async (req: Request, res: Response) => {
 
   try {
     const response = await axios.get(
-      `${EVENT_SERVICE_URL}/api/event?page=${page}`
+      `${EVENT_SERVICE_URL}/api/event?page=${page}`,
+      config.API_KEY_HEADER
     );
     res.json(response.data);
   } catch (error) {
@@ -64,7 +67,8 @@ export const createEventRoute = async (req: Request, res: Response) => {
     const eventData = req.body;
     const response = await axios.post(
       `${EVENT_SERVICE_URL}/api/event`,
-      eventData
+      eventData,
+      config.API_KEY_HEADER
     );
 
     res.status(201).json(response.data);
@@ -99,7 +103,8 @@ export const updateEventDateRoute = async (req: Request, res: Response) => {
 
     const response = await axios.put(
       `${EVENT_SERVICE_URL}/api/event/${eventId}/date`,
-      eventData
+      eventData,
+      config.API_KEY_HEADER
     );
 
     res.json(response.data);
@@ -129,7 +134,8 @@ export const updateTicketRoute = async (req: Request, res: Response) => {
       {
         ticket_type,
         quantity,
-      }
+      },
+      config.API_KEY_HEADER
     );
 
     res.json(response.data);
@@ -140,6 +146,54 @@ export const updateTicketRoute = async (req: Request, res: Response) => {
         .json({ error: "Ticket quantity cannot go below 0" });
     }
     console.error("Error updating ticket quantity:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const lockTicketRoute = async (req: Request, res: Response) => {
+  if (!verifyToken(req, res)) {
+    res.status(401).send("Not logged in");
+    return;
+  }
+  try {
+    const lockData = req.body;
+    const user = await getUserFromCookie(req);
+    lockData["username"] = user.username;
+    const response = await axios.post(
+      `${EVENT_SERVICE_URL}/api/event/lock`,
+      lockData,
+      config.API_KEY_HEADER
+    );
+
+    res.status(201).json(response.data);
+  } catch (error) {
+    if (error.response.status === 400) {
+      return res.status(400).json({ error: "Not enough tickets available" });
+    }
+    console.log("Error locking ticket:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const unlockTicketRoute = async (req: Request, res: Response) => {
+  if (!verifyToken(req, res)) {
+    res.status(401).send("Not logged in");
+    return;
+  }
+  try {
+    const { lock_id, event_id, type, quantity } = req.body;
+    const unlockData = { lock_id, event_id, type, quantity };
+    await axios.post(
+      `${EVENT_SERVICE_URL}/api/event/unlock`,
+      unlockData,
+      config.API_KEY_HEADER
+    );
+    res.status(200).json({ message: "Ticket unlocked or already expired" });
+  } catch (error) {
+    if (error.response.status === 400) {
+      return res.status(400).json({ error: "Not enough tickets available" });
+    }
+    console.log("Error unlocking ticket:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

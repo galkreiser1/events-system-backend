@@ -18,6 +18,8 @@ export const GET_ALL_EVENTS_PATH = "/api/event";
 export const CREATE_EVENT_PATH = "/api/event";
 export const UPDATE_EVENT_DATE_PATH = "/api/event/:id/date";
 export const UPDATE_EVENT_TICKET_PATH = "/api/event/:id/ticket";
+export const LOCK_TICKET_PATH = "/api/event/lock";
+export const UNLOCK_TICKET_PATH = "/api/event/unlock";
 
 /* ORDER ROUTES */
 export const ORDERS_SERVER_URL = "https://events-system-order.onrender.com";
