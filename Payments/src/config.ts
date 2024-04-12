@@ -3,4 +3,5 @@ export const config = {
   AMQPPASS: "",
   DBUSER: "",
   DBPASS: "",
+  API_KEY: "",
 };

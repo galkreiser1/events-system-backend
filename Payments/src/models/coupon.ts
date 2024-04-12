@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 
-interface couponType {
+export interface couponType {
   code: string;
   discount: number;
 }

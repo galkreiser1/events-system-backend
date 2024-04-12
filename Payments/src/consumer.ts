@@ -1,6 +1,8 @@
 import * as amqp from "amqplib";
 import UserCoupon from "./models/user_coupons.js";
 
+import { userPublisher } from "./index.js";
+
 import { config } from "./config.js";
 
 const AMQPUSER = process.env.AMQPUSER || config.AMQPUSER;
@@ -48,8 +50,10 @@ const handlePaymentQueue = async (channel: amqp.Channel, msg: amqp.Message) => {
     const userCoupon = new UserCoupon({ code, username });
     await userCoupon.save();
     console.log(`UserCoupon saved: ${userCoupon}`);
+    await userPublisher.sendEvent(JSON.stringify({ username }));
     channel.ack(msg);
   } catch (error) {
     console.log(error.message);
+    channel.ack(msg);
   }
 };

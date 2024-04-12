@@ -72,19 +72,15 @@ export const buyRoute = async (req: Request, res: Response) => {
       return;
     }
   } catch (error) {
+    const negativeQuantity = -1 * quantity;
+    axios.put(`${EVENT_SERVICE}/api/event/${eventId}/ticket`, {
+      ticket_type,
+      negativeQuantity,
+    });
     res.status(500).json({ error: "Interal server error" });
     return;
   }
 
-  //   {
-  //     "cc": "374245455400126",
-  //     "holder": "Nissan Ohana",
-  //     "cvv": "111",
-  //     "exp": "05/23",
-  //     "charge": 9
-  //     }
-
-  // verify payment
   let order_id;
   try {
     const response = await axios.post(
@@ -93,6 +89,12 @@ export const buyRoute = async (req: Request, res: Response) => {
     );
     order_id = response.data.paymentToken;
   } catch (error) {
+    const negativeQuantity = -1 * quantity;
+    axios.put(`${EVENT_SERVICE}/api/event/${eventId}/ticket`, {
+      ticket_type,
+      quantity: negativeQuantity,
+    });
+
     res.status(500).json({ error: "Payment failed" });
     return;
   }
@@ -111,8 +113,6 @@ export const buyRoute = async (req: Request, res: Response) => {
     if (coupon_code) {
       const userCoupon = { username, code: coupon_code };
       await paymentPublisher.sendEvent(JSON.stringify(userCoupon));
-
-      await userPublisher.sendEvent(JSON.stringify({ username }));
     }
   } catch (e) {
     console.log("Error sending order event", e);
