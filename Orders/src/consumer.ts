@@ -9,6 +9,8 @@ import { config } from "./config.js";
 const AMQPUSER = process.env.AMQPUSER || config.AMQPUSER;
 const AMQPPASS = process.env.AMQPPASS || config.AMQPPASS;
 
+const API_KEY = process.env.API_KEY || config.API_KEY;
+
 const EVENTS_SERVICE_URL = IS_LOCAL
   ? "http://localhost:3001"
   : "https://events-system-event.onrender.com";
@@ -115,7 +117,7 @@ const updateUsersNextEvent = async (userEventsDict: any) => {
           `${EVENTS_SERVICE_URL}/api/event/${eventId}`,
           {
             headers: {
-              Authorization: `Bearer ${config.API_KEY}`,
+              Authorization: `Bearer ${API_KEY}`,
             },
           }
         );
