@@ -112,11 +112,8 @@ export async function getNextEventRoute(req: Request, res: Response) {
     return;
   }
 
-  if (user.next_event) {
-    if (
-      user.next_event.title === "" ||
-      new Date(user.next_event.start_date) < new Date()
-    ) {
+  if (user.next_event && user.next_event.title && user.next_event.start_date) {
+    if (new Date(user.next_event.start_date) < new Date()) {
       const response = await axios.get(
         `${ORDERS_SERVICE_URL}/api/order/nextevent/${username}`,
         config.API_KEY_HEADER
