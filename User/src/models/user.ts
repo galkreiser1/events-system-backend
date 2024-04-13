@@ -1,11 +1,16 @@
 import * as mongoose from "mongoose";
 
+interface nextEventType {
+  title: string;
+  start_date: Date;
+}
+
 export interface userType {
   username: string;
   password: string;
   permission: "U" | "W" | "M" | "A";
   coupons_used: number;
-  next_event: string;
+  next_event: nextEventType;
 }
 
 const userSchema = new mongoose.Schema<userType>(
@@ -20,7 +25,10 @@ const userSchema = new mongoose.Schema<userType>(
     },
 
     coupons_used: { type: Number, default: 0 },
-    next_event: { type: String, default: "" },
+    next_event: {
+      title: { type: String },
+      start_date: { type: Date },
+    },
   },
   { timestamps: true }
 );

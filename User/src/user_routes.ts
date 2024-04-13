@@ -4,8 +4,15 @@ import bcrypt from "bcrypt";
 import { verifyToken, getUserFromCookie } from "./helper_func.js";
 import User from "./models/user.js";
 import { get } from "http";
+import axios from "axios";
+import { ORDERS_SERVER_URL, IS_LOCAL } from "./consts.js";
+import { config } from "./config.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
+
+const ORDERS_SERVICE_URL = IS_LOCAL
+  ? "http://localhost:3002"
+  : ORDERS_SERVER_URL;
 
 export async function loginRoute(req: Request, res: Response) {
   const credentials = req.body;
@@ -103,6 +110,22 @@ export async function getNextEventRoute(req: Request, res: Response) {
   } catch (e) {
     res.status(500).send("Internal server error");
     return;
+  }
+
+  if (user.next_event) {
+    if (
+      user.next_event.title === "" ||
+      new Date(user.next_event.start_date) < new Date()
+    ) {
+      const response = await axios.get(
+        `${ORDERS_SERVICE_URL}/api/order/nextevent/${username}`,
+        config.API_KEY_HEADER
+      );
+      const title = response.data.title;
+      const start_data = response.data.start_date;
+      user.next_event = { title: title, start_date: start_data };
+      await user.save();
+    }
   }
 
   res.status(200).send({ next_event: user.next_event });
