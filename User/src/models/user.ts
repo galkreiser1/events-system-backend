@@ -26,8 +26,8 @@ const userSchema = new mongoose.Schema<userType>(
 
     coupons_used: { type: Number, default: 0 },
     next_event: {
-      title: { type: String },
-      start_date: { type: Date },
+      title: { type: String, default: "" },
+      start_date: { type: Date, default: null },
     },
   },
   { timestamps: true }
