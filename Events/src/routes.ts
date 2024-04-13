@@ -10,9 +10,26 @@ export async function getEventRoute(req: Request, res: Response) {
 
     if (!event) {
       res.status(404).json({ message: "Event not found" });
-    } else {
-      res.status(200).json(event);
     }
+
+    await Promise.all(
+      event.tickets.map(async (ticket) => {
+        let lockedTickets = await TicketLock.find({
+          event_id: eventId,
+          type: ticket.type,
+        });
+        lockedTickets = lockedTickets.filter(
+          (lock) => lock.expiresAt > new Date()
+        );
+        const lockedTicketsQuantitySum = lockedTickets.reduce(
+          (acc, lock) => acc + lock.quantity,
+          0
+        );
+        ticket.quantity -= lockedTicketsQuantitySum;
+      })
+    );
+
+    res.status(200).json(event);
   } catch (error) {
     res
       .status(500)
@@ -35,8 +52,27 @@ export const getAllEventsRoute = async (req: Request, res: Response) => {
     const eventsPerPage = 9;
     const skip = (page - 1) * eventsPerPage;
 
-    // Fetch events for the current page
     const events = await Event.find({}).skip(skip).limit(eventsPerPage);
+    await Promise.all(
+      events.map(async (event) => {
+        await Promise.all(
+          event.tickets.map(async (ticket) => {
+            let lockedTickets = await TicketLock.find({
+              event_id: event._id,
+              type: ticket.type,
+            });
+            lockedTickets = lockedTickets.filter(
+              (lock) => lock.expiresAt > new Date()
+            );
+            const lockedTicketsQuantitySum = lockedTickets.reduce(
+              (acc, lock) => acc + lock.quantity,
+              0
+            );
+            ticket.quantity -= lockedTicketsQuantitySum;
+          })
+        );
+      })
+    );
 
     res.json(events);
   } catch (error) {
@@ -161,7 +197,6 @@ export const updateTicketQuantityRoute = async (
 };
 
 export const lockTicketRoute = async (req: Request, res: Response) => {
-  console.log("locking");
   const { username, event_id, type, quantity } = req.body;
 
   try {
@@ -214,7 +249,6 @@ export const lockTicketRoute = async (req: Request, res: Response) => {
 
     await newLock.save();
 
-    console.log("lock created");
     res.status(201).json({ lock_id: newLock._id });
   } catch (error) {
     console.log("Error locking ticket:", error);
@@ -224,8 +258,6 @@ export const lockTicketRoute = async (req: Request, res: Response) => {
 
 export const unLockTicketRoute = async (req: Request, res: Response) => {
   const { lock_id, event_id, type, quantity } = req.body;
-
-  console.log("unlocking lock_id", lock_id);
 
   try {
     await TicketLock.findByIdAndDelete(lock_id);
