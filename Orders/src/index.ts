@@ -8,6 +8,7 @@ import {
   GET_USER_ORDERS,
   GET_USERS_BY_EVENT,
   GET_EVENTS_BY_USER,
+  GET_USER_NEXT_EVENT,
 } from "./const.js";
 import mongoose from "mongoose";
 import {
@@ -15,6 +16,7 @@ import {
   getUserOrdersRoute,
   getUsersByEventRoute,
   getEventsByUserRoute,
+  getUserNextEventRoute,
 } from "./routes.js";
 
 import { PublisherChannel } from "./publisher.js";
@@ -61,6 +63,7 @@ app.post(CREATE_ORDER, createOrderRoute);
 app.get(GET_USER_ORDERS, getUserOrdersRoute);
 app.get(GET_USERS_BY_EVENT, getUsersByEventRoute);
 app.get(GET_EVENTS_BY_USER, getEventsByUserRoute);
+app.get(GET_USER_NEXT_EVENT, getUserNextEventRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);

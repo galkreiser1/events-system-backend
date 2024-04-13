@@ -98,3 +98,42 @@ export const getEventsByUserRoute = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getUserNextEventRoute = async (req: Request, res: Response) => {
+  const username = req.params.username;
+  try {
+    let results = [];
+    results = await Order.find({ username });
+    let events = results.map((result) => result.event_id);
+    const userEvents = await Promise.all(
+      events.map(async (eventId) => {
+        const event = await axios.get(
+          `${EVENTS_SERVICE_URL}/api/event/${eventId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${API_KEY}`,
+            },
+          }
+        );
+        return event.data;
+      })
+    );
+
+    const filteredEvents = userEvents.filter((event) => {
+      return new Date(event.start_date) > new Date();
+    });
+
+    let earliestEvent = {};
+    if (filteredEvents.length > 0) {
+      earliestEvent = filteredEvents.reduce((prev, current) =>
+        new Date(prev.start_date) < new Date(current.start_date)
+          ? prev
+          : current
+      );
+    }
+    res.status(200).json(earliestEvent);
+  } catch (e) {
+    console.log("Error fetching user next event:", e);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
