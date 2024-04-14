@@ -3,8 +3,8 @@ import User from "./models/user.js";
 
 import { config } from "./config.js";
 
-const AMQPUSER = process.env.AMQPUSER || config.AMQPUSER;
-const AMQPPASS = process.env.AMQPPASS || config.AMQPPASS;
+const AMQPUSER = process.env.AMQPUSER;
+const AMQPPASS = process.env.AMQPPASS;
 
 export const consumeMessages = async () => {
   try {
