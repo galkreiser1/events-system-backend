@@ -23,8 +23,28 @@ await mongoose.connect(dbUri);
 
 const port = process.env.PORT || 3005;
 
+const API_KEY = process.env.API_KEY;
+
 const app = express();
 app.use(express.json());
+
+const apiKeyMiddleware = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+
+    if (token === API_KEY) {
+      next();
+    } else {
+      res.status(401).json({ error: "Unauthorized" });
+    }
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+};
+
+app.use(apiKeyMiddleware);
 
 app.use(
   cors({
