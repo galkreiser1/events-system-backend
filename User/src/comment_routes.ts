@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 import { verifyToken } from "./helper_func.js";
 import { COMMENTS_SERVER_URL } from "./consts.js";
+import { config } from "./config.js";
 
 export const createCommentRoute = async (req: Request, res: Response) => {
   if (!verifyToken(req, res)) {
@@ -20,7 +21,8 @@ export const createCommentRoute = async (req: Request, res: Response) => {
     const commentData = req.body;
     const response = await axios.post(
       COMMENTS_SERVER_URL + "/api/comment",
-      commentData
+      commentData,
+      config.API_KEY_HEADER
     );
     res.json(response.data);
   } catch (error) {
@@ -45,7 +47,8 @@ export const getCommentsByEventRoute = async (req: Request, res: Response) => {
 
   try {
     const response = await axios.get(
-      COMMENTS_SERVER_URL + `/api/comment/${eventId}/${pageNumber}`
+      COMMENTS_SERVER_URL + `/api/comment/${eventId}/${pageNumber}`,
+      config.API_KEY_HEADER
     );
     res.json(response.data);
   } catch (error) {
@@ -73,7 +76,8 @@ export const getNumOfCommentsByEventRoute = async (
 
   try {
     const response = await axios.get(
-      COMMENTS_SERVER_URL + `/api/comment/${eventId}/num`
+      COMMENTS_SERVER_URL + `/api/comment/${eventId}/num`,
+      config.API_KEY_HEADER
     );
     res.json(response.data);
   } catch (error) {
