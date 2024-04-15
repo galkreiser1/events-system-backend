@@ -4,8 +4,8 @@ import Coupon from "./models/coupon.js";
 import axios from "axios";
 import { orderPublisher, paymentPublisher } from "./index.js";
 import { config } from "./config.js";
-
 const API_KEY = process.env.API_KEY || config.API_KEY;
+import UserCoupon from "./models/user_coupons.js";
 
 const EVENT_SERVICE = IS_LOCAL
   ? "http://localhost:3001"
@@ -134,8 +134,14 @@ export const buyRoute = async (req: Request, res: Response) => {
     await orderPublisher.sendEvent(JSON.stringify(order));
 
     if (coupon_code) {
-      const userCoupon = { username, code: coupon_code };
-      await paymentPublisher.sendEvent(JSON.stringify(userCoupon));
+      try {
+        const userCoupon = { username, code: coupon_code };
+        const newUserCoupon = new UserCoupon(userCoupon);
+        await newUserCoupon.save();
+        await paymentPublisher.sendEvent(JSON.stringify(userCoupon));
+      } catch (e) {
+        console.log("coupn already used");
+      }
     }
   } catch (e) {
     console.log("Error sending order event", e);
