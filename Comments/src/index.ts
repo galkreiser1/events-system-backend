@@ -32,6 +32,14 @@ app.use(express.json());
 const apiKeyMiddleware = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
+  const { path } = req.url;
+
+  if (path === "https://events-system-comments.onrender.com/wakeup") {
+    // Allow requests with path "/wakeup" to proceed without authorization check
+    next();
+    return;
+  }
+
   if (authHeader && authHeader.startsWith("Bearer ")) {
     const token = authHeader.split(" ")[1];
 
