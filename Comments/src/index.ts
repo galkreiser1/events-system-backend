@@ -10,6 +10,7 @@ import {
   createCommentRoute,
   getCommentsByEventRoute,
   getNumOfCommentsByEventRoute,
+  wakeUpCommentRoute,
 } from "./routes.js";
 import cors from "cors";
 
@@ -56,6 +57,7 @@ app.use(
 app.post(CREATE_COMMENT, createCommentRoute);
 app.get(GET_NUM_OF_COMMENTS_BY_EVENT, getNumOfCommentsByEventRoute);
 app.get(GET_COMMENTS_BY_EVENT, getCommentsByEventRoute);
+app.get("/wakeup", wakeUpCommentRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);

@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import Comment from "./models/comment.js";
 import axios from "axios";
 
+export async function wakeUpCommentRoute(req: Request, res: Response) {
+  res.status(200).send("Comment server is awake");
+}
+
 export async function createCommentRoute(req: Request, res: Response) {
   try {
     const commentData = req.body;
