@@ -10,7 +10,7 @@ import {
   createCommentRoute,
   getCommentsByEventRoute,
   getNumOfCommentsByEventRoute,
-  wakeUpCommentRoute,
+  //wakeUpCommentRoute,
 } from "./routes.js";
 import cors from "cors";
 
@@ -30,15 +30,15 @@ const app = express();
 app.use(express.json());
 
 const apiKeyMiddleware = (req, res, next) => {
-  const { path } = req;
-  console.log(path);
+  // const { path } = req;
+  // console.log(path);
 
-  if (path === "/wakeup") {
-    // Allow requests with path "/wakeup" to proceed without authorization check
-    console.log(path);
-    next();
-    return;
-  }
+  // if (path === "/wakeup") {
+  //   // Allow requests with path "/wakeup" to proceed without authorization check
+  //   console.log(path);
+  //   next();
+  //   return;
+  // }
   const authHeader = req.headers["authorization"];
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
@@ -66,7 +66,7 @@ app.use(
 app.post(CREATE_COMMENT, createCommentRoute);
 app.get(GET_NUM_OF_COMMENTS_BY_EVENT, getNumOfCommentsByEventRoute);
 app.get(GET_COMMENTS_BY_EVENT, getCommentsByEventRoute);
-app.get("/wakeup", wakeUpCommentRoute);
+//app.get("/wakeup", wakeUpCommentRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);
