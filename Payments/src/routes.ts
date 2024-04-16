@@ -134,13 +134,14 @@ export const buyRoute = async (req: Request, res: Response) => {
     await orderPublisher.sendEvent(JSON.stringify(order));
 
     if (coupon_code) {
-      try {
+      const existingCoupon = await UserCoupon.findOne(username, coupon_code);
+      if (existingCoupon) {
+        console.log("coupon already used");
+      } else {
         const userCoupon = { username, code: coupon_code };
         const newUserCoupon = new UserCoupon(userCoupon);
         await newUserCoupon.save();
         await paymentPublisher.sendEvent(JSON.stringify(userCoupon));
-      } catch (e) {
-        console.log("coupn already used");
       }
     }
   } catch (e) {
