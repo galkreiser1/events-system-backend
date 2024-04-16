@@ -113,7 +113,7 @@ app.get(NEXT_EVENT_PATH, getNextEventRoute);
 app.get(COUPONS_PATH, getNumofCouponsRoute);
 
 app.get(USERNAME_PATH, getUserRoute);
-app.post(PERMISSION_PATH, updateUserPermissionRoute);
+app.put(PERMISSION_PATH, updateUserPermissionRoute);
 
 /* EVENT ROUTES */
 app.get(GET_EVENT_PATH, getEventRoute);
