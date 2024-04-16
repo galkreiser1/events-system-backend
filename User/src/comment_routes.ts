@@ -10,13 +10,6 @@ export const createCommentRoute = async (req: Request, res: Response) => {
     return;
   }
 
-  // TODO: should be here or on the routes?
-  // validate request body:
-  // if (!req.body.eventId || !req.body.comment || !req.body.date) {
-  //     res.status(400).send("Invalid parameters");
-  //     return;
-  // }
-
   try {
     const commentData = req.body;
     const response = await axios.post(
@@ -36,8 +29,7 @@ export const getCommentsByEventRoute = async (req: Request, res: Response) => {
     res.status(401).send("Not logged in");
     return;
   }
-  // TODO: should be here or on the routes?
-  // validate request body:
+
   if (!req.params.eventId || !req.params.page) {
     res.status(400).send("Invalid parameters");
     return;
@@ -65,12 +57,6 @@ export const getNumOfCommentsByEventRoute = async (
     res.status(401).send("Not logged in");
     return;
   }
-  // TODO: should be here or on the routes?
-  // validate request body:
-  //   if (!req.params.eventId) {
-  //     res.status(400).send("Invalid parameters");
-  //     return;
-  //   }
 
   const eventId = req.params.eventId;
 

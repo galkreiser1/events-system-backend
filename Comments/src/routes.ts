@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import Comment from "./models/comment.js";
 import axios from "axios";
 
-//TODO: errors
-//TODO: security?
 export async function createCommentRoute(req: Request, res: Response) {
   try {
     const commentData = req.body;

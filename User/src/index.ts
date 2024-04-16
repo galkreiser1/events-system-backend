@@ -6,9 +6,9 @@ import mongoose from "mongoose";
 import { consumeMessages } from "./consumer.js";
 
 import {
-  loginRoute,
-  logoutRoute,
-  signupRoute,
+  // loginRoute,
+  // logoutRoute,
+  // signupRoute,
   updateNextEventRoute,
   updateNumofCouponsRoute,
   getNextEventRoute,
@@ -17,6 +17,8 @@ import {
   updateUserPermissionRoute,
   //usernameRoute,
 } from "./user_routes.js";
+
+import { loginRoute, logoutRoute, signupRoute } from "./routes.js";
 
 import {
   getEventRoute,
