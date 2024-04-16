@@ -4,7 +4,6 @@ import Coupon from "./models/coupon.js";
 import axios from "axios";
 import { orderPublisher, paymentPublisher } from "./index.js";
 import { config } from "./config.js";
-
 const API_KEY = process.env.API_KEY || config.API_KEY;
 
 const EVENT_SERVICE = IS_LOCAL

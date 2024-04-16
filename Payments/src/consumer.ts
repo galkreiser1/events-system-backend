@@ -48,9 +48,17 @@ const handlePaymentQueue = async (channel: amqp.Channel, msg: amqp.Message) => {
   try {
     const { code, username } = JSON.parse(msg.content);
     const userCoupon = new UserCoupon({ code, username });
-    await userCoupon.save();
-    console.log(`UserCoupon saved: ${userCoupon}`);
-    await userPublisher.sendEvent(JSON.stringify({ username }));
+    const existingCoupon = await UserCoupon.findOne({
+      code: code,
+      username: username,
+    });
+    if (existingCoupon) {
+      console.log("coupon already used");
+    } else {
+      await userCoupon.save();
+      console.log(`UserCoupon saved: ${userCoupon}`);
+      await userPublisher.sendEvent(JSON.stringify({ username }));
+    }
     channel.ack(msg);
   } catch (error) {
     console.log(error.message);
