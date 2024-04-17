@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const API_KEY = process.env.API_KEY;
+import cron from "node-cron";
 
-const cron = require("node-cron");
+const API_KEY = process.env.API_KEY;
 
 // Define your cron job schedule
 export const job = cron.schedule("*/15 8-23 * * *", async () => {

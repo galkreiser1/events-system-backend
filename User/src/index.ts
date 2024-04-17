@@ -83,17 +83,16 @@ import {
 
 import { job } from "./wakeup_cron_jobs.js";
 
-job.start();
-
 dotenv.config();
 
 let dbUri;
-const DBUSER = process.env.DBUSERNAME;
+const DBUSERNAME = process.env.DBUSERNAME;
 const DBPASS = process.env.DBPASS;
 
-dbUri = `mongodb+srv://${DBUSER}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
+dbUri = `mongodb+srv://${DBUSERNAME}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
 
 await mongoose.connect(dbUri);
+await job.start();
 
 const port = process.env.PORT || 3000;
 
