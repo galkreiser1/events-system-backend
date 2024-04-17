@@ -5,7 +5,7 @@ import { publisherChannel } from "./index.js";
 
 export async function wakeUpEventRoute(req: Request, res: Response) {
   console.log("Health check");
-  res.status(200).send("Comment server is awake");
+  res.status(200).send("Event server is awake");
 }
 
 export async function getEventRoute(req: Request, res: Response) {

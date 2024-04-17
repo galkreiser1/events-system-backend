@@ -7,7 +7,7 @@ import { JWT_SECRET } from "./consts.js";
 
 export async function wakeUpUsersRoute(req: Request, res: Response) {
   console.log("Health check");
-  res.status(200).send("Comment server is awake");
+  res.status(200).send("Users server is awake");
 }
 
 export async function loginRoute(req: Request, res: Response) {

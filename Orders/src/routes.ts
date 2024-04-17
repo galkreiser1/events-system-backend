@@ -12,7 +12,7 @@ const API_KEY = process.env.API_KEY || config.API_KEY;
 
 export async function wakeUpOrderRoute(req: Request, res: Response) {
   console.log("Health check");
-  res.status(200).send("Comment server is awake");
+  res.status(200).send("Order server is awake");
 }
 
 export const getUserOrdersRoute = async (req: Request, res: Response) => {

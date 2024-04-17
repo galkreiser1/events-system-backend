@@ -12,7 +12,7 @@ const EVENT_SERVICE = IS_LOCAL
 
 export async function wakeUpPaymentRoute(req: Request, res: Response) {
   console.log("Health check");
-  res.status(200).send("Comment server is awake");
+  res.status(200).send("Payment server is awake");
 }
 
 export const createCouponRoute = async (req: Request, res: Response) => {
