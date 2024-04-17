@@ -70,7 +70,7 @@ export async function wakeUpUsersRoute(req: Request, res: Response) {
   } else {
     console.log("Order service failed to wake up");
   }
-
+  console.log("Done!");
   res.status(200).send("Done!");
 }
 
