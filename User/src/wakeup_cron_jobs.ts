@@ -5,7 +5,7 @@ const API_KEY = process.env.API_KEY;
 const cron = require("node-cron");
 
 // Define your cron job schedule
-const job = cron.schedule("*/15 8-23 * * *", async () => {
+export const job = cron.schedule("*/15 8-23 * * *", async () => {
   console.log("Running cron job...");
 
   const usersRes = await axios.get(
@@ -77,4 +77,4 @@ const job = cron.schedule("*/15 8-23 * * *", async () => {
 });
 
 // Start the cron job
-job.start();
+// job.start();
