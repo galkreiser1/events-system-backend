@@ -5,6 +5,11 @@ import { verifyToken } from "./helper_func.js";
 import User from "./models/user.js";
 import { JWT_SECRET } from "./consts.js";
 
+export async function wakeUpUsersRoute(req: Request, res: Response) {
+  console.log("Health check");
+  res.status(200).send("Comment server is awake");
+}
+
 export async function loginRoute(req: Request, res: Response) {
   const credentials = req.body;
   try {

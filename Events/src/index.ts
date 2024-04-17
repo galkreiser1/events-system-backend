@@ -18,6 +18,7 @@ import {
   updateTicketQuantityRoute,
   lockTicketRoute,
   unLockTicketRoute,
+  wakeUpEventRoute,
 } from "./routes.js";
 
 import { PublisherChannel } from "./publisher.js";
@@ -44,6 +45,15 @@ const app = express();
 app.use(express.json());
 
 const apiKeyMiddleware = (req, res, next) => {
+  const { path } = req;
+  console.log(path);
+
+  if (path === "/wakeup") {
+    // Allow requests with path "/wakeup" to proceed without authorization check
+    console.log(path);
+    next();
+    return;
+  }
   const authHeader = req.headers["authorization"];
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
@@ -68,6 +78,7 @@ app.put(UPDATE_EVENT_DATE, updateEventDatesRoute);
 app.put(UPDATE_EVENT_TICKET, updateTicketQuantityRoute);
 app.post(LOCK_TICKET, lockTicketRoute);
 app.post(UNLOCK_TICKET, unLockTicketRoute);
+app.get("/wakeup", wakeUpEventRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);

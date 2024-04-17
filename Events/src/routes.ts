@@ -3,6 +3,11 @@ import Event from "./models/event.js";
 import TicketLock from "./models/ticketlock.js";
 import { publisherChannel } from "./index.js";
 
+export async function wakeUpEventRoute(req: Request, res: Response) {
+  console.log("Health check");
+  res.status(200).send("Comment server is awake");
+}
+
 export async function getEventRoute(req: Request, res: Response) {
   const eventId = req.params.id;
   try {

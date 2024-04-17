@@ -10,6 +10,11 @@ const EVENTS_SERVICE_URL = IS_LOCAL
 
 const API_KEY = process.env.API_KEY || config.API_KEY;
 
+export async function wakeUpOrderRoute(req: Request, res: Response) {
+  console.log("Health check");
+  res.status(200).send("Comment server is awake");
+}
+
 export const getUserOrdersRoute = async (req: Request, res: Response) => {
   const username = req.params.username;
 

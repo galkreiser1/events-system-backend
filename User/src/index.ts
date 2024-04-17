@@ -18,7 +18,12 @@ import {
   //usernameRoute,
 } from "./user_routes.js";
 
-import { loginRoute, logoutRoute, signupRoute } from "./routes.js";
+import {
+  loginRoute,
+  logoutRoute,
+  signupRoute,
+  wakeUpUsersRoute,
+} from "./routes.js";
 
 import {
   getEventRoute,
@@ -110,6 +115,7 @@ app.post(LOGOUT_PATH, logoutRoute);
 app.post(SIGNUP_PATH, signupRoute);
 app.post(NEXT_EVENT_PATH, updateNextEventRoute);
 app.post(COUPONS_PATH, updateNumofCouponsRoute);
+app.get("/wakeup", wakeUpUsersRoute);
 
 app.get(NEXT_EVENT_PATH, getNextEventRoute);
 app.get(COUPONS_PATH, getNumofCouponsRoute);

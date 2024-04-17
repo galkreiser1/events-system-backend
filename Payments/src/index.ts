@@ -2,7 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { CREATE_COUPON, GET_COUPON, BUY } from "./const.js";
-import { createCouponRoute, getCouponRoute, buyRoute } from "./routes.js";
+import {
+  createCouponRoute,
+  getCouponRoute,
+  buyRoute,
+  wakeUpPaymentRoute,
+} from "./routes.js";
 import { PublisherChannel } from "./publisher.js";
 import { consumeMessages } from "./consumer.js";
 import { config } from "./config.js";
@@ -33,6 +38,15 @@ const app = express();
 app.use(express.json());
 
 const apiKeyMiddleware = (req, res, next) => {
+  const { path } = req;
+  console.log(path);
+
+  if (path === "/wakeup") {
+    // Allow requests with path "/wakeup" to proceed without authorization check
+    console.log(path);
+    next();
+    return;
+  }
   const authHeader = req.headers["authorization"];
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
@@ -53,6 +67,7 @@ app.use(apiKeyMiddleware);
 app.post(CREATE_COUPON, createCouponRoute);
 app.get(GET_COUPON, getCouponRoute);
 app.post(BUY, buyRoute);
+app.get("/wakeup", wakeUpPaymentRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);

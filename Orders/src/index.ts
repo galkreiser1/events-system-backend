@@ -17,6 +17,7 @@ import {
   getUsersByEventRoute,
   getEventsByUserRoute,
   getUserNextEventRoute,
+  wakeUpOrderRoute,
 } from "./routes.js";
 
 import { PublisherChannel } from "./publisher.js";
@@ -42,6 +43,15 @@ const app = express();
 app.use(express.json());
 
 const apiKeyMiddleware = (req, res, next) => {
+  const { path } = req;
+  console.log(path);
+
+  if (path === "/wakeup") {
+    // Allow requests with path "/wakeup" to proceed without authorization check
+    console.log(path);
+    next();
+    return;
+  }
   const authHeader = req.headers["authorization"];
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
@@ -64,6 +74,7 @@ app.get(GET_USER_ORDERS, getUserOrdersRoute);
 app.get(GET_USERS_BY_EVENT, getUsersByEventRoute);
 app.get(GET_EVENTS_BY_USER, getEventsByUserRoute);
 app.get(GET_USER_NEXT_EVENT, getUserNextEventRoute);
+app.get("/wakeup", wakeUpOrderRoute);
 
 app.listen(port, () => {
   console.log(`Server running! port ${port}`);

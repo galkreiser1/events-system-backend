@@ -10,6 +10,11 @@ const EVENT_SERVICE = IS_LOCAL
   ? "http://localhost:3001"
   : "https://events-system-event.onrender.com";
 
+export async function wakeUpPaymentRoute(req: Request, res: Response) {
+  console.log("Health check");
+  res.status(200).send("Comment server is awake");
+}
+
 export const createCouponRoute = async (req: Request, res: Response) => {
   const { code, discount } = req.body;
 
