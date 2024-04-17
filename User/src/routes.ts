@@ -6,7 +6,8 @@ import User from "./models/user.js";
 import { JWT_SECRET } from "./consts.js";
 
 export async function wakeUpUsersRoute(req: Request, res: Response) {
-  console.log("Health check");
+  console.log("Waking up...");
+
   res.status(200).send("Users server is awake");
 }
 

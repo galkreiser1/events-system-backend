@@ -11,7 +11,8 @@ const EVENTS_SERVICE_URL = IS_LOCAL
 const API_KEY = process.env.API_KEY || config.API_KEY;
 
 export async function wakeUpOrderRoute(req: Request, res: Response) {
-  console.log("Health check");
+  console.log("Waking up...");
+
   res.status(200).send("Order server is awake");
 }
 

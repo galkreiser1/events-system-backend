@@ -11,7 +11,8 @@ const EVENT_SERVICE = IS_LOCAL
   : "https://events-system-event.onrender.com";
 
 export async function wakeUpPaymentRoute(req: Request, res: Response) {
-  console.log("Health check");
+  console.log("Waking up...");
+
   res.status(200).send("Payment server is awake");
 }
 

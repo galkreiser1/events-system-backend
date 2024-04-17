@@ -4,7 +4,8 @@ import TicketLock from "./models/ticketlock.js";
 import { publisherChannel } from "./index.js";
 
 export async function wakeUpEventRoute(req: Request, res: Response) {
-  console.log("Health check");
+  console.log("Waking up...");
+
   res.status(200).send("Event server is awake");
 }
 

@@ -3,7 +3,7 @@ import Comment from "./models/comment.js";
 import axios from "axios";
 
 export async function wakeUpCommentRoute(req: Request, res: Response) {
-  console.log("Health check");
+  console.log("Waking up...");
   res.status(200).send("Comment server is awake");
 }
 
