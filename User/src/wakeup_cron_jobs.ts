@@ -4,7 +4,8 @@ import cron from "node-cron";
 
 const API_KEY = process.env.API_KEY;
 
-// Define your cron job schedule
+// not really part of the project, only for deployment purposes - wake up services when Render puts them to sleep
+
 export const job = cron.schedule("*/15 8-23 * * *", async () => {
   console.log("Running cron job...");
 

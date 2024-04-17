@@ -81,7 +81,7 @@ import {
   UNLOCK_TICKET_PATH,
 } from "./consts.js";
 
-import { job } from "./wakeup_cron_jobs.js";
+// import { job } from "./wakeup_cron_jobs.js";
 
 dotenv.config();
 
@@ -92,7 +92,7 @@ const DBPASS = process.env.DBPASS;
 dbUri = `mongodb+srv://${DBUSERNAME}:${DBPASS}@cluster2.zpgwucf.mongodb.net/events_system?retryWrites=true&w=majority&appName=Cluster2`;
 
 await mongoose.connect(dbUri);
-await job.start();
+// await job.start();
 
 const port = process.env.PORT || 3000;
 
@@ -118,6 +118,7 @@ app.post(LOGOUT_PATH, logoutRoute);
 app.post(SIGNUP_PATH, signupRoute);
 app.post(NEXT_EVENT_PATH, updateNextEventRoute);
 app.post(COUPONS_PATH, updateNumofCouponsRoute);
+// not really part of the project, only for deployment purposes - wake up services when Render puts them to sleep:
 app.get("/wakeup", wakeUpUsersRoute);
 
 app.get(NEXT_EVENT_PATH, getNextEventRoute);
