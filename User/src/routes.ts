@@ -4,11 +4,74 @@ import bcrypt from "bcrypt";
 import { verifyToken } from "./helper_func.js";
 import User from "./models/user.js";
 import { JWT_SECRET } from "./consts.js";
+import axios from "axios";
 
+// not really part of the project, only for deployment purposes - wake up services when Render puts them to sleep
 export async function wakeUpUsersRoute(req: Request, res: Response) {
-  console.log("Waking up...");
+  console.log("Users server woke up");
+  console.log("Waking up other services ...");
 
-  res.status(200).send("Users server is awake");
+  const API_KEY = process.env.API_KEY;
+
+  const eventRes = await axios.get(
+    "https://events-system-event.onrender.com/wakeup",
+    {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    }
+  );
+
+  if (eventRes.status === 200) {
+    console.log("Event service woke up successfully");
+  } else {
+    console.log("Event service failed to wake up");
+  }
+
+  const paymentRes = await axios.get(
+    "https://events-system-payment.onrender.com/wakeup",
+    {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    }
+  );
+
+  if (paymentRes.status === 200) {
+    console.log("Payment service woke up successfully");
+  } else {
+    console.log("Payment service failed to wake up");
+  }
+  const commentsRes = await axios.get(
+    "https://events-system-comments.onrender.com/wakeup",
+    {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    }
+  );
+
+  if (commentsRes.status === 200) {
+    console.log("Comments service woke up successfully");
+  } else {
+    console.log("Comments service failed to wake up");
+  }
+  const orderRes = await axios.get(
+    "https://events-system-order.onrender.com/wakeup",
+    {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    }
+  );
+
+  if (orderRes.status === 200) {
+    console.log("Order service woke up successfully");
+  } else {
+    console.log("Order service failed to wake up");
+  }
+  console.log("Done!");
+  res.status(200).send("Done!");
 }
 
 export async function loginRoute(req: Request, res: Response) {
