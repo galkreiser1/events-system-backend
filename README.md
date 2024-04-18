@@ -22,6 +22,8 @@ Central flows:
 <img src="https://github.com/BennyMSV/events-system-backend/blob/main/Central%20macro%20flows.png" alt="Central flows" width="500" height="300" />  
   
 [Full Project Design](https://github.com/BennyMSV/events-system-backend/blob/main/Events%20System%20-%20Final%20Project%20Design.pdf)  
+[Screens Chart](https://github.com/BennyMSV/events-system-backend/blob/main/Screens%20chart.png)  
+ 
 
 
 
