@@ -84,19 +84,6 @@ export const buyRoute = async (req: Request, res: Response) => {
       return;
     }
   } catch (error) {
-    const negativeQuantity = -1 * quantity;
-    axios.put(
-      `${EVENT_SERVICE}/api/event/${eventId}/ticket`,
-      {
-        ticket_type,
-        negativeQuantity,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-        },
-      }
-    );
     res.status(500).json({ error: "Interal server error" });
     return;
   }
@@ -109,20 +96,6 @@ export const buyRoute = async (req: Request, res: Response) => {
     );
     order_id = response.data.paymentToken;
   } catch (error) {
-    const negativeQuantity = -1 * quantity;
-    axios.put(
-      `${EVENT_SERVICE}/api/event/${eventId}/ticket`,
-      {
-        ticket_type,
-        quantity: negativeQuantity,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-        },
-      }
-    );
-
     res.status(500).json({ error: "Payment failed" });
     return;
   }
