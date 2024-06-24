@@ -2,7 +2,7 @@
 
 This is the backend repository for the Events System Project (Fullstack).  
   
-You can view the frontend repository here - https://github.com/BennyMSV/events-system-frontend
+You can view the frontend repository here - [https://github.com/BennyMSV/events-system-frontend](https://github.com/galkreiser1/events-system)
 
 The project is deployed, you can access it via this link - https://bennymsv.github.io/events-system/
 
